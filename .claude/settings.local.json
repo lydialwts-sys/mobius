@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-expo-app@latest . --template blank-typescript)",
+      "Read(//usr/local/bin/**)",
+      "Read(//usr/local/**)",
+      "Bash(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh -o /tmp/brew_install.sh)",
+      "Bash(curl -fsSL https://fnm.vercel.app/install)",
+      "Bash(bash)",
+      "Bash(bash -s -- --skip-shell)",
+      "Bash(curl -fsSL https://github.com/Schniz/fnm/releases/latest/download/fnm-macos.zip -o /tmp/fnm.zip)",
+      "Bash(unzip -o /tmp/fnm.zip -d /usr/local/bin/)",
+      "Bash(chmod +x /usr/local/bin/fnm)",
+      "Bash(/usr/local/bin/fnm --version)",
+      "Bash(mkdir -p ~/.fnm)",
+      "Bash(unzip -o /tmp/fnm.zip -d ~/.fnm/)",
+      "Bash(chmod +x ~/.fnm/fnm)",
+      "Bash(~/.fnm/fnm --version)",
+      "Bash(cp -r /Users/lydialwts/Documents/mobius-app/* /Users/lydialwts/Documents/mobius/)",
+      "Bash(cp /Users/lydialwts/Documents/mobius-app/.gitignore /Users/lydialwts/Documents/mobius/)",
+      "Bash(rm -rf /Users/lydialwts/Documents/mobius-app)",
+      "mcp__Claude_Preview__preview_start"
+    ]
+  }
+}
