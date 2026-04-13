@@ -2,10 +2,14 @@ import React from 'react';
 import { View, Text, StyleSheet, Pressable, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Spacing, Typography, BorderRadius, Fonts } from '../../src/constants/theme';
+import { MotiView } from 'moti';
+import { Colors, Spacing, Typography, BorderRadius, Fonts, Layout } from '../../src/constants/theme';
+import { SPRING_BOUNCY, SPRING_GENTLE } from '../../src/constants/animations';
+import { useUser } from '../../src/context/UserContext';
 
 export default function ChatHomeScreen() {
   const router = useRouter();
+  const { user } = useUser();
 
   return (
     <View style={styles.container}>
@@ -15,21 +19,27 @@ export default function ChatHomeScreen() {
       </View>
 
       {/* Character */}
+      <MotiView from={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', ...SPRING_BOUNCY, delay: 100 }}>
       <View style={styles.characterContainer}>
         <View style={styles.characterCircle}>
           <Image
-            source={require('../../assets/emotions_png/motivated.png')}
+            source={require('../../assets/emotions_png/happy.png')}
             style={{ width: 120, height: 120 }}
             resizeMode="contain"
           />
         </View>
       </View>
 
+      </MotiView>
+
       {/* Greeting */}
+      <MotiView from={{ opacity: 0, translateY: 12 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: 300 }}>
       <View style={styles.greetingContainer}>
-        <Text style={styles.greeting}>Good afternoon, Alex</Text>
+        <Text style={styles.greeting}>Good afternoon, {user.firstName}</Text>
         <Text style={styles.subtitle}>What's going on?</Text>
       </View>
+
+      </MotiView>
 
       {/* Spacer */}
       <View style={{ flex: 1 }} />
@@ -64,7 +74,7 @@ const styles = StyleSheet.create({
   },
   topBar: {
     paddingHorizontal: Spacing.xxl,
-    paddingTop: 56,
+    paddingTop: Layout.statusBarOffset,
     paddingBottom: Spacing.lg,
   },
   characterContainer: {

@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { MotiView } from 'moti';
 import { Colors, Spacing, Typography, BorderRadius } from '../../src/constants/theme';
+import { SPRING_GENTLE, staggerDelay } from '../../src/constants/animations';
 import { EmotionCharacter } from '../../src/components/EmotionCharacter';
 import { emotionCharacters } from '../../src/data/mockData';
 
@@ -18,11 +20,13 @@ export default function CollectionScreen() {
       </View>
       <Text style={styles.sectionTitle}>Discovered</Text>
       <View style={styles.grid}>
-        {unlocked.map((char) => (
-          <View key={char.id} style={styles.charCard}>
+        {unlocked.map((char, i) => (
+          <MotiView key={char.id} from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: staggerDelay(i, 100) }}>
+          <View style={styles.charCard}>
             <EmotionCharacter character={char} size="lg" />
             <Text style={styles.charDesc}>{char.description}</Text>
           </View>
+          </MotiView>
         ))}
       </View>
       <Text style={styles.sectionTitle}>Undiscovered</Text>

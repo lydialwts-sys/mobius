@@ -2,8 +2,11 @@ import React from 'react';
 import { View, Text, ScrollView, StyleSheet, Pressable, Image } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Spacing, Typography, BorderRadius, Fonts } from '../../src/constants/theme';
+import { MotiView } from 'moti';
+import { Colors, Layout, Spacing, Typography, BorderRadius, Fonts } from '../../src/constants/theme';
+import { SPRING_BOUNCY, staggerDelay } from '../../src/constants/animations';
 import { courses } from '../../src/data/mockData';
+import { BackButton } from '../../src/components/BackButton';
 
 export default function CourseDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -14,20 +17,13 @@ export default function CourseDetailScreen() {
     return <View style={styles.container}><Text>Course not found</Text></View>;
   }
 
-  const handleBack = () => {
-    // Always navigate back to the Learn tab (course homescreen)
-    router.replace('/(tabs)');
-  };
-
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
       <View style={styles.container}>
         {/* Top bar */}
         <View style={styles.topBar}>
-          <Pressable onPress={handleBack} hitSlop={12}>
-            <Ionicons name="arrow-back" size={24} color={Colors.text} />
-          </Pressable>
+          <BackButton fallbackRoute="/(tabs)" />
           <View style={styles.courseDropdown}>
             <Text style={styles.courseDropdownText}>{course.title}</Text>
             <Ionicons name="chevron-down" size={16} color={Colors.text} />
@@ -41,7 +37,7 @@ export default function CourseDetailScreen() {
             const isAvailable = lesson.steps.length > 0;
 
             return (
-              <View key={lesson.id} style={styles.treeNode}>
+              <MotiView key={lesson.id} from={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', ...SPRING_BOUNCY, delay: staggerDelay(index, 100) }} style={styles.treeNode}>
                 {/* Dotted line connector */}
                 {index > 0 && (
                   <View style={styles.connector}>
@@ -81,7 +77,7 @@ export default function CourseDetailScreen() {
                     <Text style={styles.nodeLabelText}>{lesson.title}</Text>
                   </View>
                 </Pressable>
-              </View>
+              </MotiView>
             );
           })}
         </ScrollView>
@@ -99,7 +95,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: Spacing.xxl,
-    paddingTop: 56,
+    paddingTop: Layout.statusBarOffset,
     paddingBottom: Spacing.lg,
     gap: Spacing.lg,
   },

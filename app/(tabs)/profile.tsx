@@ -1,8 +1,12 @@
-import React from 'react';
-import { View, Text, ScrollView, StyleSheet, Pressable, Image } from 'react-native';
+import React, { useRef } from 'react';
+import { View, Text, ScrollView, StyleSheet, Pressable, Image, Animated } from 'react-native';
+import { MotiView } from 'moti';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Spacing, Typography, BorderRadius, Fonts } from '../../src/constants/theme';
+import { Colors, Layout, Spacing, Typography, BorderRadius, Fonts } from '../../src/constants/theme';
+import { SPRING_GENTLE, staggerDelay } from '../../src/constants/animations';
+import { SettingsIcon } from '../../src/components/SettingsIcon';
+import { useUser } from '../../src/context/UserContext';
 
 const weekMoods = [
   { day: 'S', emoji: '😊' },
@@ -16,9 +20,9 @@ const weekMoods = [
 
 const emotionCards = [
   { id: 'overwhelmed', name: 'Overwhelmed', progress: 0.7, image: require('../../assets/emotions_png/overwhelmed.png') },
-  { id: 'jealousy', name: 'Jealousy', progress: 0.5, image: require('../../assets/emotions_png/motivated.png') },
-  { id: 'guilty', name: 'Guilty', progress: 0.3, image: require('../../assets/emotions_png/overwhelmed.png') },
-  { id: 'embarrassed', name: 'Embarrassed', progress: 0.1, image: require('../../assets/emotions_png/motivated.png') },
+  { id: 'jealousy', name: 'Jealousy', progress: 0.5, image: require('../../assets/emotions_png/jealous.png') },
+  { id: 'guilty', name: 'Guilty', progress: 0.3, image: require('../../assets/emotions_png/guilty.png') },
+  { id: 'embarrassed', name: 'Embarrassed', progress: 0.1, image: require('../../assets/emotions_png/embarassed.png') },
 ];
 
 const filterTags = [
@@ -29,19 +33,49 @@ const filterTags = [
 
 export default function ProfileScreen() {
   const router = useRouter();
+  const { user } = useUser();
+  const spinAnim = useRef(new Animated.Value(0)).current;
+
+  const handleSettingsPress = () => {
+    Animated.timing(spinAnim, {
+      toValue: 1,
+      duration: 400,
+      useNativeDriver: true,
+    }).start(() => {
+      spinAnim.setValue(0);
+      router.push('/profile/settings');
+    });
+  };
+
+  const spin = spinAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '180deg'],
+  });
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <Text style={styles.name}>Alex Wu</Text>
+          <Text style={styles.name}>{user.fullName}</Text>
           <View style={styles.badge}>
             <Text style={styles.badgeText}>Quiet observer</Text>
           </View>
         </View>
-        <View style={styles.avatar}>
-          <Image source={require('../../assets/emotions_png/motivated.png')} style={{ width: 48, height: 48 }} resizeMode="contain" />
+        {/* Avatar with settings icon overlapping top-right */}
+        <View style={styles.avatarContainer}>
+          {user.profileImage ? (
+            <Image source={{ uri: user.profileImage }} style={styles.avatarImg} />
+          ) : (
+            <View style={styles.avatar}>
+              <Image source={require('../../assets/emotions_png/motivated.png')} style={{ width: 48, height: 48 }} resizeMode="contain" />
+            </View>
+          )}
+          <Pressable onPress={handleSettingsPress} style={styles.settingsBadge} hitSlop={8}>
+            <Animated.View style={{ transform: [{ rotate: spin }] }}>
+              <SettingsIcon size={24} />
+            </Animated.View>
+          </Pressable>
         </View>
       </View>
 
@@ -54,10 +88,12 @@ export default function ProfileScreen() {
       </View>
       <View style={styles.moodWeek}>
         {weekMoods.map((mood, i) => (
-          <View key={i} style={styles.moodDay}>
-            <Text style={styles.moodEmoji}>{mood.emoji}</Text>
-            <Text style={styles.moodDayLabel}>{mood.day}</Text>
-          </View>
+          <MotiView key={i} from={{ opacity: 0, translateY: 8 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: staggerDelay(i, 200) }}>
+            <View style={styles.moodDay}>
+              <Text style={styles.moodEmoji}>{mood.emoji}</Text>
+              <Text style={styles.moodDayLabel}>{mood.day}</Text>
+            </View>
+          </MotiView>
         ))}
       </View>
 
@@ -78,8 +114,9 @@ export default function ProfileScreen() {
 
       {/* Emotion cards grid */}
       <View style={styles.emotionGrid}>
-        {emotionCards.map((emotion) => (
-          <Pressable key={emotion.id} style={styles.emotionCard}>
+        {emotionCards.map((emotion, i) => (
+          <MotiView key={emotion.id} from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: staggerDelay(i, 500) }} style={{ width: '47%' }}>
+          <Pressable style={styles.emotionCard}>
             <View style={styles.emotionIllustration}>
               <Image source={emotion.image} style={{ width: 56, height: 56 }} resizeMode="contain" />
             </View>
@@ -88,6 +125,7 @@ export default function ProfileScreen() {
               <View style={[styles.progressFill, { width: `${emotion.progress * 100}%` }]} />
             </View>
           </Pressable>
+          </MotiView>
         ))}
       </View>
 
@@ -103,13 +141,28 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: Spacing.xxl,
-    paddingTop: 56,
+    paddingTop: Layout.statusBarOffset,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     marginBottom: Spacing.xxl,
+  },
+  avatarContainer: {
+    position: 'relative',
+  },
+  avatarImg: {
+    width: 64, height: 64, borderRadius: 32,
+    borderWidth: 2, borderColor: Colors.text,
+  },
+  settingsBadge: {
+    position: 'absolute',
+    top: -6,
+    right: -6,
+    backgroundColor: Colors.background,
+    borderRadius: 16,
+    padding: 2,
   },
   headerLeft: {
     gap: Spacing.sm,
@@ -207,7 +260,6 @@ const styles = StyleSheet.create({
     gap: Spacing.md,
   },
   emotionCard: {
-    width: '47%' as any,
     backgroundColor: Colors.surface,
     borderRadius: BorderRadius.md,
     borderWidth: 1,

@@ -1,22 +1,22 @@
 import React, { useRef } from 'react';
 import { View, Text, ScrollView, StyleSheet, Pressable, Image, Animated } from 'react-native';
 import { useRouter, Stack } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import { Colors, Spacing, Typography, BorderRadius, Fonts } from '../../src/constants/theme';
+import { Colors, Layout, Spacing, Typography, BorderRadius, Fonts } from '../../src/constants/theme';
+import { BackButton } from '../../src/components/BackButton';
 
 const journalEntries = [
   {
     month: 'December',
     entries: [
-      { id: '1', date: 'Dec 16, 2025', vibe: 'Low-key stressed', image: require('../../assets/emotions_png/overwhelmed.png') },
-      { id: '2', date: 'Dec 12, 2025', vibe: 'Mid', image: require('../../assets/emotions_png/motivated.png') },
+      { id: '1', date: 'Dec 16, 2025', vibe: 'Low-key stressed', image: require('../../assets/emotions_png/stress.png') },
+      { id: '2', date: 'Dec 12, 2025', vibe: 'Mid', image: require('../../assets/emotions_png/meh.png') },
       { id: '3', date: 'Dec 10, 2025', vibe: 'Slayyyyyy', image: require('../../assets/emotions_png/motivated.png') },
     ],
   },
   {
     month: 'November',
     entries: [
-      { id: '4', date: 'Dec 01, 2025', vibe: 'Literally low-key', image: require('../../assets/emotions_png/overwhelmed.png') },
+      { id: '4', date: 'Dec 01, 2025', vibe: 'Literally low-key', image: require('../../assets/emotions_png/tired.png') },
     ],
   },
 ];
@@ -51,9 +51,7 @@ export default function MoodJournalScreen() {
       <View style={styles.container}>
         {/* Top bar */}
         <View style={styles.topBar}>
-          <Pressable onPress={() => router.canGoBack() ? router.back() : router.replace('/(tabs)/profile')} hitSlop={12}>
-            <Ionicons name="arrow-back" size={24} color={Colors.text} />
-          </Pressable>
+          <BackButton fallbackRoute="/(tabs)/profile" />
         </View>
 
         <ScrollView contentContainerStyle={styles.content}>
@@ -97,7 +95,7 @@ const styles = StyleSheet.create({
   },
   topBar: {
     paddingHorizontal: Spacing.xxl,
-    paddingTop: 52,
+    paddingTop: Layout.statusBarOffset,
     paddingBottom: Spacing.md,
   },
   content: {

@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, ScrollView, StyleSheet, Pressable, Image, TextInput, Animated, Dimensions } from 'react-native';
-import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
+import { useLocalSearchParams, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import Svg, { Path } from 'react-native-svg';
 import { Audio } from 'expo-av';
-import { Colors, Spacing, BorderRadius, Fonts } from '../../src/constants/theme';
+import { Colors, Layout, Spacing, BorderRadius, Fonts } from '../../src/constants/theme';
+import { BackButton } from '../../src/components/BackButton';
 
 function MapPinIcon({ size = 16, color = '#000' }: { size?: number; color?: string }) {
   return (
@@ -50,7 +51,6 @@ const WAVEFORM_BARS = Array.from({ length: 40 }, (_, i) => {
 type ViewMode = 'journal' | 'stickers';
 
 export default function JournalEntryScreen() {
-  const router = useRouter();
   const [viewMode, setViewMode] = useState<ViewMode>('journal');
   const [stickerSearch, setStickerSearch] = useState('');
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
@@ -117,9 +117,7 @@ export default function JournalEntryScreen() {
       <Stack.Screen options={{ headerShown: false }} />
       <Animated.View style={[styles.container, { transform: [{ scale }], opacity }]}>
         <View style={styles.topBar}>
-          <Pressable onPress={() => router.back()} hitSlop={12}>
-            <Ionicons name="arrow-back" size={24} color={Colors.text} />
-          </Pressable>
+          <BackButton />
         </View>
 
         <View style={styles.dateHeader}>
@@ -252,7 +250,7 @@ export default function JournalEntryScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
-  topBar: { paddingHorizontal: Spacing.xxl, paddingTop: 52, paddingBottom: Spacing.sm },
+  topBar: { paddingHorizontal: Spacing.xxl, paddingTop: Layout.statusBarOffset, paddingBottom: Spacing.sm },
   dateHeader: { paddingHorizontal: Spacing.xxl, marginBottom: Spacing.md },
   dateText: { fontSize: 26, fontFamily: Fonts.heading, color: Colors.text, marginBottom: Spacing.xs },
   breadcrumbRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing.xs },

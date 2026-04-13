@@ -12,6 +12,7 @@ export function LearnNormal({ size = 24 }: { size?: number }) {
 export function LearnSelected({ size = 24 }: { size?: number }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M6 13.5L0 15V1.5L6 0L12 3L18 1.5V15L12 16.5L6 13.5Z" fill="#F7D917" />
       <Path d="M9 17.25V3.75" stroke="#002FA7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       <Path d="M15 6.75V20.25" stroke="#002FA7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       <Path d="M9 17.25L3 18.75V5.25L9 3.75L15 6.75L21 5.25V18.75L15 20.25L9 17.25Z" stroke="#002FA7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />

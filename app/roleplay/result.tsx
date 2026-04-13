@@ -1,7 +1,9 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
+import { MotiView } from 'moti';
 import { Colors, Spacing, Typography, BorderRadius } from '../../src/constants/theme';
+import { SPRING_BOUNCY, SPRING_GENTLE, staggerDelay } from '../../src/constants/animations';
 import { Button } from '../../src/components/Button';
 import { EmotionCharacter } from '../../src/components/EmotionCharacter';
 import { emotionCharacters } from '../../src/data/mockData';
@@ -12,11 +14,13 @@ export default function RoleplayResultScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <View style={styles.header}>
-        <Text style={{ fontSize: 56, marginBottom: 16 }}>🎉</Text>
-        <Text style={styles.title}>Roleplay Complete!</Text>
-        <Text style={styles.subtitle}>Nice work navigating that situation.</Text>
-      </View>
+      <MotiView from={{ opacity: 0, scale: 0.6 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', ...SPRING_BOUNCY }}>
+        <View style={styles.header}>
+          <Text style={{ fontSize: 56, marginBottom: 16 }}>🎉</Text>
+          <Text style={styles.title}>Roleplay Complete!</Text>
+          <Text style={styles.subtitle}>Nice work navigating that situation.</Text>
+        </View>
+      </MotiView>
       <View style={styles.skillsCard}>
         <Text style={styles.skillsTitle}>Skills Practiced</Text>
         {['Pausing before reacting', 'Identifying your inner critic', 'Separating self-worth from social media'].map((s, i) => (

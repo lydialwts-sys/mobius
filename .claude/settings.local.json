@@ -28,7 +28,9 @@
       "Bash(mkdir -p ~/.ssh)",
       "Bash(ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N \"\" -C \"lydialwts@mobius\")",
       "Bash(git add:*)",
-      "Bash(git commit -m ':*)"
+      "Bash(git commit -m ':*)",
+      "Bash(ls /Users/lydialwts/Documents/mobius/assets/emotions_png/*.png)",
+      "Bash(xargs -I{} basename {} .png)"
     ]
   }
 }

@@ -21,6 +21,8 @@ export const Colors = {
   textLight: '#F6F5F2',
   border: '#E5E5E5',
   borderLight: '#F0F0F0',
+  cardInactive: '#EBE8DD',
+  cardBorder: '#DBD9D4',
   success: '#16A34A',
   warning: '#EAB308',
   error: '#DC2626',
@@ -105,4 +107,13 @@ export const Typography = {
     fontFamily: Fonts.bodySemiBold,
     color: Colors.textLight,
   },
+};
+
+// Layout constants — avoid hardcoded magic numbers
+export const Layout = {
+  statusBarOffset: 52,
+  screenPaddingH: Spacing.xxl,
+  tabBarHeight: 80,
+  iconSize: 24,
+  backButtonSize: 24,
 };

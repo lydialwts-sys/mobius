@@ -1,38 +1,46 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet, Pressable, Image } from 'react-native';
 import { useRouter } from 'expo-router';
+import { MotiView } from 'moti';
 import { Colors, Spacing, Typography, BorderRadius, Fonts } from '../../src/constants/theme';
+import { SPRING_GENTLE, staggerDelay } from '../../src/constants/animations';
 import { courses } from '../../src/data/mockData';
+import { useUser } from '../../src/context/UserContext';
 
 const emotionLessons = [
   { id: 'calm-overwhelm', title: 'Calm\noverwhelm', progress: 0.7, image: require('../../assets/emotions_png/overwhelmed.png') },
-  { id: 'reframe-jealousy', title: 'Reframe\njealousy', progress: 0.5, image: require('../../assets/emotions_png/motivated.png') },
-  { id: 'let-go-guilt', title: 'Let go of\nguilt', progress: 0.3, image: require('../../assets/emotions_png/overwhelmed.png') },
-  { id: 'move-past-embarrassment', title: 'Move past\nembarrass\n-ment', progress: 0.1, image: require('../../assets/emotions_png/motivated.png') },
+  { id: 'reframe-jealousy', title: 'Reframe\njealousy', progress: 0.5, image: require('../../assets/emotions_png/jealous.png') },
+  { id: 'let-go-guilt', title: 'Let go of\nguilt', progress: 0.3, image: require('../../assets/emotions_png/guilty.png') },
+  { id: 'move-past-embarrassment', title: 'Move past\nembarrass\n-ment', progress: 0.1, image: require('../../assets/emotions_png/embarassed.png') },
 ];
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { user } = useUser();
   const continueCourse = courses[1]; // The ghosted post
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       {/* Header */}
-      <View style={styles.header}>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.greeting}>Good afternoon,</Text>
-          <Text style={styles.greetingName}>Alex</Text>
+      <MotiView from={{ opacity: 0, translateY: -10 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE }}>
+        <View style={styles.header}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.greeting}>Good afternoon,</Text>
+            <Text style={styles.greetingName}>{user.fullName}</Text>
+          </View>
+          <View style={styles.characterCircle}>
+            <Image source={require('../../assets/emotions_png/motivated.png')} style={styles.characterImage} resizeMode="contain" />
+          </View>
         </View>
-        <View style={styles.characterCircle}>
-          <Image source={require('../../assets/emotions_png/motivated.png')} style={styles.characterImage} resizeMode="contain" />
-        </View>
-      </View>
+      </MotiView>
 
       {/* Continue Learning */}
-      <Text style={styles.sectionTitle}>Continue Learning</Text>
+      <MotiView from={{ opacity: 0, translateY: 16 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: 100 }}>
+        <Text style={styles.sectionTitle}>Continue Learning</Text>
+      </MotiView>
       <Pressable
         style={styles.continueCard}
-        onPress={() => router.push(`/course/${continueCourse.id}`)}
+        onPress={() => router.push('/roleplay/ghosted-post')}
       >
         <View style={styles.continueIcon}>
           <Image source={require('../../assets/emotions_png/overwhelmed.png')} style={{ width: 36, height: 36 }} resizeMode="contain" />
@@ -52,11 +60,13 @@ export default function HomeScreen() {
       </Pressable>
 
       {/* Learn Emotions */}
-      <Text style={styles.sectionTitle}>Learn emotions</Text>
+      <MotiView from={{ opacity: 0, translateY: 16 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: 300 }}>
+        <Text style={styles.sectionTitle}>Learn emotions</Text>
+      </MotiView>
       <View style={styles.emotionGrid}>
-        {emotionLessons.map((lesson) => (
+        {emotionLessons.map((lesson, i) => (
+          <MotiView key={lesson.id} from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: staggerDelay(i, 400) }} style={{ width: '48%' }}>
           <Pressable
-            key={lesson.id}
             style={styles.emotionCard}
             onPress={() => router.push(`/course/${courses[0].id}`)}
           >
@@ -70,6 +80,7 @@ export default function HomeScreen() {
               <Image source={lesson.image} style={{ width: 56, height: 56 }} resizeMode="contain" />
             </View>
           </Pressable>
+          </MotiView>
         ))}
       </View>
 
@@ -186,7 +197,6 @@ const styles = StyleSheet.create({
     gap: Spacing.md,
   },
   emotionCard: {
-    width: '48%' as any,
     aspectRatio: 0.85,
     backgroundColor: Colors.surface,
     borderRadius: BorderRadius.md,
@@ -196,8 +206,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   emotionTitle: {
-    fontSize: 18,
-    lineHeight: 24,
+    fontSize: 14,
+    lineHeight: 20,
     fontFamily: Fonts.bodySemiBold,
     color: Colors.text,
   },

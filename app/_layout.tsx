@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import { View, ActivityIndicator } from 'react-native';
 import { Colors } from '../src/constants/theme';
+import { UserProvider } from '../src/context/UserContext';
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -24,7 +25,7 @@ export default function RootLayout() {
   }
 
   return (
-    <>
+    <UserProvider>
       <StatusBar style="dark" />
       <Stack
         screenOptions={{
@@ -38,10 +39,8 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="onboarding/index" options={{ headerShown: false }} />
         <Stack.Screen name="course/[id]" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="course/lesson/[lessonId]"
-          options={{ title: 'Lesson', headerBackTitle: 'Back', presentation: 'modal' }}
-        />
+        <Stack.Screen name="course/lesson/[lessonId]" options={{ title: 'Lesson', headerBackTitle: 'Back', presentation: 'modal' }} />
+        <Stack.Screen name="roleplay/ghosted-post" options={{ headerShown: false }} />
         <Stack.Screen name="roleplay/intro" options={{ title: 'Roleplay', headerBackTitle: 'Home' }} />
         <Stack.Screen name="roleplay/scene" options={{ headerShown: false, presentation: 'modal' }} />
         <Stack.Screen name="roleplay/result" options={{ headerShown: false, presentation: 'modal' }} />
@@ -49,10 +48,10 @@ export default function RootLayout() {
         <Stack.Screen name="chat/emotion-result" options={{ title: 'Your Emotions', presentation: 'modal' }} />
         <Stack.Screen name="journal/mood-journal" options={{ headerShown: false }} />
         <Stack.Screen name="journal/new" options={{ title: 'New Entry', presentation: 'modal' }} />
-        <Stack.Screen name="journal/[id]" options={{ title: 'Journal Entry', headerBackTitle: 'Back' }} />
+        <Stack.Screen name="journal/[id]" options={{ headerShown: false }} />
         <Stack.Screen name="profile/collection" options={{ title: 'Emotion Collection', headerBackTitle: 'Profile' }} />
-        <Stack.Screen name="profile/settings" options={{ title: 'Settings', headerBackTitle: 'Profile' }} />
+        <Stack.Screen name="profile/settings" options={{ headerShown: false }} />
       </Stack>
-    </>
+    </UserProvider>
   );
 }
