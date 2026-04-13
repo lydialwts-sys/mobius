@@ -19,7 +19,16 @@
       "Bash(cp -r /Users/lydialwts/Documents/mobius-app/* /Users/lydialwts/Documents/mobius/)",
       "Bash(cp /Users/lydialwts/Documents/mobius-app/.gitignore /Users/lydialwts/Documents/mobius/)",
       "Bash(rm -rf /Users/lydialwts/Documents/mobius-app)",
-      "mcp__Claude_Preview__preview_start"
+      "mcp__Claude_Preview__preview_start",
+      "Bash(gh auth:*)",
+      "Bash(git remote:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(ssh -T git@github.com)",
+      "Bash(mkdir -p ~/.ssh)",
+      "Bash(ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N \"\" -C \"lydialwts@mobius\")",
+      "Bash(git add:*)",
+      "Bash(git commit -m ':*)"
     ]
   }
 }

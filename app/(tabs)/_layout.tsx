@@ -1,14 +1,13 @@
 import { Tabs } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '../../src/constants/theme';
-import { View } from 'react-native';
+import { Colors, Fonts } from '../../src/constants/theme';
+import { LearnNormal, LearnSelected, ChatNormal, ChatSelected, ProfileNormal, ProfileSelected } from '../../src/components/NavIcons';
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors.text,
-        tabBarInactiveTintColor: Colors.textSecondary,
+        tabBarActiveTintColor: Colors.primary,
+        tabBarInactiveTintColor: Colors.dark,
         tabBarStyle: {
           backgroundColor: Colors.surface,
           borderTopColor: Colors.border,
@@ -19,11 +18,11 @@ export default function TabLayout() {
         },
         tabBarLabelStyle: {
           fontSize: 12,
-          fontWeight: '500',
+          fontFamily: Fonts.bodyMedium,
         },
         headerStyle: { backgroundColor: Colors.background },
         headerTintColor: Colors.text,
-        headerTitleStyle: { fontWeight: '700', fontSize: 18 },
+        headerTitleStyle: { fontFamily: Fonts.bodySemiBold, fontSize: 18 },
         headerShadowVisible: false,
       }}
     >
@@ -32,7 +31,7 @@ export default function TabLayout() {
         options={{
           title: 'Learn',
           headerShown: false,
-          tabBarIcon: ({ color, size }) => <Ionicons name="book-outline" size={size} color={color} />,
+          tabBarIcon: ({ focused }) => focused ? <LearnSelected /> : <LearnNormal />,
         }}
       />
       <Tabs.Screen
@@ -40,11 +39,7 @@ export default function TabLayout() {
         options={{
           title: 'Chat',
           headerShown: false,
-          tabBarIcon: ({ color, focused }) => (
-            <View style={focused ? { backgroundColor: Colors.brand, borderRadius: 6, padding: 4 } : { padding: 4 }}>
-              <Ionicons name="chatbubble" size={20} color={focused ? Colors.text : color} />
-            </View>
-          ),
+          tabBarIcon: ({ focused }) => focused ? <ChatSelected /> : <ChatNormal />,
         }}
       />
       <Tabs.Screen
@@ -52,7 +47,7 @@ export default function TabLayout() {
         options={{
           title: 'Profile',
           headerShown: false,
-          tabBarIcon: ({ color, size }) => <Ionicons name="person-outline" size={size} color={color} />,
+          tabBarIcon: ({ focused }) => focused ? <ProfileSelected /> : <ProfileNormal />,
         }}
       />
     </Tabs>
