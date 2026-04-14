@@ -156,6 +156,67 @@ export const courses: Course[] = [
   },
 ];
 
+// Chapters group multiple sessions under one emotion theme
+export interface ChapterSession {
+  id: string;
+  title: string;
+  route: string;
+  locked: boolean;
+  completed: boolean;
+}
+
+export interface Chapter {
+  id: string;
+  title: string;
+  emotionId: string; // links to emotion intro page
+  sessions: ChapterSession[];
+}
+
+export const chapters: Chapter[] = [
+  {
+    id: 'ease-anxiety',
+    title: 'Ease Anxiety',
+    emotionId: 'anxiety',
+    sessions: [
+      { id: 'meet-anxiety', title: 'Meet Anxiety', route: '/emotion/anxiety', locked: false, completed: false },
+      { id: 'silence-inner-critic', title: 'Silence the inner critique', route: '/course/silence-inner-critic', locked: false, completed: false },
+      { id: 'ghosted-post', title: 'The ghosted post', route: '/roleplay/ghosted-post', locked: false, completed: false },
+    ],
+  },
+];
+
+// Emotion intro pages
+export interface EmotionIntro {
+  id: string;
+  name: string;
+  description: string;
+  imageKey: string; // key in EmotionAssets
+  insights: { title: string; body: string }[];
+  relatedEmotions: { name: string; imageKey: string }[];
+  chapterId: string; // links to the chapter
+}
+
+export const emotionIntros: EmotionIntro[] = [
+  {
+    id: 'anxiety',
+    name: 'Anxiety',
+    description: "A constant sense of unease, even when nothing's obviously wrong.",
+    imageKey: 'worried',
+    insights: [
+      { title: 'Social Radar', body: 'Your inner critic is not trying to hurt you, it\'s a "Security Guard" that is way too stressed out.' },
+      { title: 'The 70% Rule', body: 'Most people around me are fighting the same internal battle, even if they look cool.' },
+      { title: 'Name It to Tame It', body: "When you label what you're feeling, the intensity drops. Try saying 'I notice I feel anxious' instead of 'I am anxious.'" },
+    ],
+    relatedEmotions: [
+      { name: 'Overwhelmed', imageKey: 'overwhelmed' },
+      { name: 'Jealous', imageKey: 'jealous' },
+      { name: 'Guilty', imageKey: 'guilty' },
+      { name: 'Embarrassed', imageKey: 'embarassed' },
+    ],
+    chapterId: 'ease-anxiety',
+  },
+];
+
 export const roleplayScenarios = [
   {
     id: 'ghosted-rp',

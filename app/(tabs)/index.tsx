@@ -1,9 +1,9 @@
-import React from 'react';
-import { View, Text, ScrollView, StyleSheet, Pressable, Image } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, Text, ScrollView, StyleSheet, Pressable, Image, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MotiView } from 'moti';
 import { Colors, Spacing, Typography, BorderRadius, Fonts } from '../../src/constants/theme';
-import { SPRING_GENTLE, staggerDelay } from '../../src/constants/animations';
+import { SPRING_GENTLE, SPRING_SNAPPY, staggerDelay } from '../../src/constants/animations';
 import { courses } from '../../src/data/mockData';
 import { useUser } from '../../src/context/UserContext';
 
@@ -18,6 +18,16 @@ export default function HomeScreen() {
   const router = useRouter();
   const { user } = useUser();
   const continueCourse = courses[1]; // The ghosted post
+  const cardScale = useRef(new Animated.Value(1)).current;
+
+  const handleContinuePress = () => {
+    Animated.sequence([
+      Animated.spring(cardScale, { toValue: 1.015, useNativeDriver: true, speed: 50, bounciness: 0 }),
+      Animated.spring(cardScale, { toValue: 1.0, useNativeDriver: true, speed: 30, bounciness: 0 }),
+    ]).start(() => {
+      router.push('/roleplay/ghosted-post');
+    });
+  };
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -35,12 +45,14 @@ export default function HomeScreen() {
       </MotiView>
 
       {/* Continue Learning */}
-      <MotiView from={{ opacity: 0, translateY: 16 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: 100 }}>
+      <MotiView from={{ opacity: 0, translateY: 8 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: 50 }}>
         <Text style={styles.sectionTitle}>Continue Learning</Text>
       </MotiView>
+      <MotiView from={{ opacity: 0, translateY: 8 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: 75 }}>
+      <Animated.View style={{ transform: [{ scale: cardScale }] }}>
       <Pressable
         style={styles.continueCard}
-        onPress={() => router.push('/roleplay/ghosted-post')}
+        onPress={handleContinuePress}
       >
         <View style={styles.continueIcon}>
           <Image source={require('../../assets/emotions_png/overwhelmed.png')} style={{ width: 36, height: 36 }} resizeMode="contain" />
@@ -58,14 +70,16 @@ export default function HomeScreen() {
           </View>
         </View>
       </Pressable>
+      </Animated.View>
+      </MotiView>
 
       {/* Learn Emotions */}
-      <MotiView from={{ opacity: 0, translateY: 16 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: 300 }}>
+      <MotiView from={{ opacity: 0, translateY: 8 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: 75 }}>
         <Text style={styles.sectionTitle}>Learn emotions</Text>
       </MotiView>
       <View style={styles.emotionGrid}>
         {emotionLessons.map((lesson, i) => (
-          <MotiView key={lesson.id} from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: staggerDelay(i, 400) }} style={{ width: '48%' }}>
+          <MotiView key={lesson.id} from={{ opacity: 0, translateY: 5 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: staggerDelay(i, 400) }} style={{ width: '48%' }}>
           <Pressable
             style={styles.emotionCard}
             onPress={() => router.push(`/course/${courses[0].id}`)}

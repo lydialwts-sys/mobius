@@ -19,7 +19,7 @@ export default function ChatHomeScreen() {
       </View>
 
       {/* Character */}
-      <MotiView from={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', ...SPRING_BOUNCY, delay: 100 }}>
+      <MotiView from={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', ...SPRING_BOUNCY, delay: 50 }}>
       <View style={styles.characterContainer}>
         <View style={styles.characterCircle}>
           <Image
@@ -33,7 +33,7 @@ export default function ChatHomeScreen() {
       </MotiView>
 
       {/* Greeting */}
-      <MotiView from={{ opacity: 0, translateY: 12 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: 300 }}>
+      <MotiView from={{ opacity: 0, translateY: 6 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: 75 }}>
       <View style={styles.greetingContainer}>
         <Text style={styles.greeting}>Good afternoon, {user.firstName}</Text>
         <Text style={styles.subtitle}>What's going on?</Text>

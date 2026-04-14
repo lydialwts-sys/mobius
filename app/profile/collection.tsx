@@ -21,7 +21,7 @@ export default function CollectionScreen() {
       <Text style={styles.sectionTitle}>Discovered</Text>
       <View style={styles.grid}>
         {unlocked.map((char, i) => (
-          <MotiView key={char.id} from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: staggerDelay(i, 100) }}>
+          <MotiView key={char.id} from={{ opacity: 0, translateY: 5 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: staggerDelay(i, 100) }}>
           <View style={styles.charCard}>
             <EmotionCharacter character={char} size="lg" />
             <Text style={styles.charDesc}>{char.description}</Text>

@@ -70,8 +70,8 @@ export default function GhostedPostRP() {
 
   const handleNext = () => {
     if (step >= STEPS.length - 1) {
-      // Complete — go to result
-      router.replace('/roleplay/result');
+      // Complete — go back to chapter
+      router.replace('/chapter/ease-anxiety');
       return;
     }
     setSelectedChoice(null);
@@ -85,7 +85,7 @@ export default function GhostedPostRP() {
   };
 
   const handleClose = () => {
-    router.replace('/(tabs)');
+    router.replace('/chapter/ease-anxiety');
   };
 
   // --- INTRO SCREEN ---
@@ -101,7 +101,7 @@ export default function GhostedPostRP() {
             </Pressable>
           </View>
 
-          <MotiView from={{ opacity: 0, translateY: 16 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE }}>
+          <MotiView from={{ opacity: 0, translateY: 8 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE }}>
             <Text style={styles.introTitle}>The ghosted post</Text>
             <Text style={styles.introTag}>Anticipate 3 min</Text>
             <Text style={styles.introDesc}>
@@ -109,7 +109,7 @@ export default function GhostedPostRP() {
             </Text>
           </MotiView>
 
-          <MotiView from={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', ...SPRING_BOUNCY, delay: 200 }} style={styles.introImageContainer}>
+          <MotiView from={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', ...SPRING_BOUNCY, delay: 50 }} style={styles.introImageContainer}>
             <Image source={EmotionAssets.worried} style={styles.introImage} resizeMode="contain" />
           </MotiView>
 
@@ -160,7 +160,7 @@ export default function GhostedPostRP() {
 
           {/* Narrative card */}
           {currentStep.narration && (
-            <MotiView key={`narr-${step}`} from={{ opacity: 0, translateY: 12 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE }}>
+            <MotiView key={`narr-${step}`} from={{ opacity: 0, translateY: 6 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE }}>
               <View style={styles.narrativeCard}>
                 <Text style={styles.narrativeText}>{currentStep.narration}</Text>
               </View>
@@ -169,7 +169,7 @@ export default function GhostedPostRP() {
 
           {/* Inner critic thought bubble */}
           {currentStep.type === 'critic' && currentStep.criticText && (
-            <MotiView key={`critic-${step}`} from={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', ...SPRING_BOUNCY, delay: 300 }}>
+            <MotiView key={`critic-${step}`} from={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', ...SPRING_BOUNCY, delay: 75 }}>
               <View style={styles.criticBubble}>
                 <Text style={styles.criticText}>{currentStep.criticText}</Text>
               </View>
@@ -180,7 +180,7 @@ export default function GhostedPostRP() {
           {currentStep.type === 'choice' && currentStep.choices && (
             <View style={styles.choiceContainer}>
               {currentStep.choices.map((choice, i) => (
-                <MotiView key={i} from={{ opacity: 0, translateY: 12 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: staggerDelay(i, 200) }}>
+                <MotiView key={i} from={{ opacity: 0, translateY: 6 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: staggerDelay(i, 200) }}>
                   <Pressable
                     style={[styles.choiceCard, selectedChoice === i && styles.choiceSelected]}
                     onPress={() => handleChoice(i)}
@@ -202,7 +202,7 @@ export default function GhostedPostRP() {
 
           {/* Insight content */}
           {currentStep.type === 'insight' && (
-            <MotiView from={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', ...SPRING_BOUNCY, delay: 200 }}>
+            <MotiView from={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', ...SPRING_BOUNCY, delay: 50 }}>
               <View style={styles.insightCard}>
                 <Text style={styles.insightTitle}>{currentStep.insightTitle}</Text>
                 <Text style={styles.insightBody}>{currentStep.insightBody}</Text>
@@ -212,7 +212,7 @@ export default function GhostedPostRP() {
 
           {/* Illustration */}
           {currentStep.image && (
-            <MotiView key={`img-${step}`} from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: 200 }}>
+            <MotiView key={`img-${step}`} from={{ opacity: 0, translateY: 5 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: 50 }}>
               <View style={styles.illustrationContainer}>
                 <Image source={currentStep.image} style={styles.illustration} resizeMode="contain" />
               </View>

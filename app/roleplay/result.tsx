@@ -14,7 +14,7 @@ export default function RoleplayResultScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <MotiView from={{ opacity: 0, scale: 0.6 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', ...SPRING_BOUNCY }}>
+      <MotiView from={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', ...SPRING_BOUNCY }}>
         <View style={styles.header}>
           <Text style={{ fontSize: 56, marginBottom: 16 }}>🎉</Text>
           <Text style={styles.title}>Roleplay Complete!</Text>

@@ -30,7 +30,11 @@
       "Bash(git add:*)",
       "Bash(git commit -m ':*)",
       "Bash(ls /Users/lydialwts/Documents/mobius/assets/emotions_png/*.png)",
-      "Bash(xargs -I{} basename {} .png)"
+      "Bash(xargs -I{} basename {} .png)",
+      "Bash(sed -i '' 's/scale: 0.6/scale: 0.92/g' app/roleplay/result.tsx)",
+      "Bash(sed -i '' 's/scale: 0.8/scale: 0.94/g' app/chapter/\\\\[id\\\\].tsx)",
+      "Bash(sed -i '' 's/scale: 0.8/scale: 0.94/g' src/components/EmotionCharacter.tsx)",
+      "Bash(sed -i '' 's/scale: 0.85/scale: 0.95/g' app/emotion/\\\\[id\\\\].tsx)"
     ]
   }
 }

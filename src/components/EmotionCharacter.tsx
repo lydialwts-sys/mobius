@@ -20,9 +20,9 @@ export function EmotionCharacter({ character, size = 'md', onPress, showName = t
 
   return (
     <MotiView
-      from={{ opacity: 0, scale: 0.8 }}
+      from={{ opacity: 0, scale: 0.94 }}
       animate={{ opacity: 1, scale: pressed ? PRESS_SCALE : 1 }}
-      transition={{ type: 'spring', ...SPRING_BOUNCY, delay: index * 60 }}
+      transition={{ type: 'spring', ...SPRING_BOUNCY, delay: index * STAGGER_MS }}
     >
       <Pressable
         onPress={onPress}

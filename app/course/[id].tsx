@@ -23,7 +23,7 @@ export default function CourseDetailScreen() {
       <View style={styles.container}>
         {/* Top bar */}
         <View style={styles.topBar}>
-          <BackButton fallbackRoute="/(tabs)" />
+          <BackButton fallbackRoute="/chapter/ease-anxiety" />
           <View style={styles.courseDropdown}>
             <Text style={styles.courseDropdownText}>{course.title}</Text>
             <Ionicons name="chevron-down" size={16} color={Colors.text} />

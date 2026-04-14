@@ -38,6 +38,8 @@ export default function RootLayout() {
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="onboarding/index" options={{ headerShown: false }} />
+        <Stack.Screen name="emotion/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="chapter/[id]" options={{ headerShown: false }} />
         <Stack.Screen name="course/[id]" options={{ headerShown: false }} />
         <Stack.Screen name="course/lesson/[lessonId]" options={{ title: 'Lesson', headerBackTitle: 'Back', presentation: 'modal' }} />
         <Stack.Screen name="roleplay/ghosted-post" options={{ headerShown: false }} />

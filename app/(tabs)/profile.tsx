@@ -115,7 +115,7 @@ export default function ProfileScreen() {
       {/* Emotion cards grid */}
       <View style={styles.emotionGrid}>
         {emotionCards.map((emotion, i) => (
-          <MotiView key={emotion.id} from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: staggerDelay(i, 500) }} style={{ width: '47%' }}>
+          <MotiView key={emotion.id} from={{ opacity: 0, translateY: 5 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: staggerDelay(i, 500) }} style={{ width: '47%' }}>
           <Pressable style={styles.emotionCard}>
             <View style={styles.emotionIllustration}>
               <Image source={emotion.image} style={{ width: 56, height: 56 }} resizeMode="contain" />

@@ -73,7 +73,7 @@ export default function ConversationScreen() {
         onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}>
 
         {visibleMessages.map((msg) => (
-          <MotiView key={msg.id} from={{ opacity: 0, translateY: 10 }} animate={{ opacity: 1, translateY: 0 }}
+          <MotiView key={msg.id} from={{ opacity: 0, translateY: 5 }} animate={{ opacity: 1, translateY: 0 }}
             transition={{ type: 'spring', ...SPRING_GENTLE }}>
             <View style={msg.role === 'user' ? styles.userRow : styles.aiRow}>
               {msg.role === 'ai' && (
@@ -112,7 +112,7 @@ export default function ConversationScreen() {
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.optionsRow}>
               {exerciseOptions.map((option, i) => (
                 <MotiView key={option.id} from={{ opacity: 0, translateY: 8 }} animate={{ opacity: 1, translateY: 0 }}
-                  transition={{ type: 'timing', duration: 400, delay: 100 + i * 80 }}>
+                  transition={{ type: 'timing', duration: 400, delay: 50 + i * 80 }}>
                   <Pressable
                     style={[
                       styles.exerciseCard,
