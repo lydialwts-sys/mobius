@@ -7,6 +7,8 @@ import { Colors, Layout, Spacing, Typography, BorderRadius, Fonts } from '../../
 import { SPRING_GENTLE, staggerDelay } from '../../src/constants/animations';
 import { SettingsIcon } from '../../src/components/SettingsIcon';
 import { useUser } from '../../src/context/UserContext';
+import { EmotionAsset } from '../../src/components/EmotionAsset';
+import type { EmotionKey } from '../../src/constants/assets';
 
 const weekMoods = [
   { day: 'S', emoji: '😊' },
@@ -18,11 +20,11 @@ const weekMoods = [
   { day: 'S', emoji: '😊' },
 ];
 
-const emotionCards = [
-  { id: 'overwhelmed', name: 'Overwhelmed', progress: 0.7, image: require('../../assets/emotions_png/overwhelmed.png') },
-  { id: 'jealousy', name: 'Jealousy', progress: 0.5, image: require('../../assets/emotions_png/jealous.png') },
-  { id: 'guilty', name: 'Guilty', progress: 0.3, image: require('../../assets/emotions_png/guilty.png') },
-  { id: 'embarrassed', name: 'Embarrassed', progress: 0.1, image: require('../../assets/emotions_png/embarassed.png') },
+const emotionCards: { id: string; name: string; progress: number; emotion: EmotionKey }[] = [
+  { id: 'overwhelmed', name: 'Overwhelmed', progress: 0.7, emotion: 'overwhelmed' },
+  { id: 'jealousy', name: 'Jealousy', progress: 0.5, emotion: 'jealous' },
+  { id: 'guilty', name: 'Guilty', progress: 0.3, emotion: 'guilty' },
+  { id: 'embarrassed', name: 'Embarrassed', progress: 0.1, emotion: 'embarassed' },
 ];
 
 const filterTags = [
@@ -68,7 +70,7 @@ export default function ProfileScreen() {
             <Image source={{ uri: user.profileImage }} style={styles.avatarImg} />
           ) : (
             <View style={styles.avatar}>
-              <Image source={require('../../assets/emotions_png/motivated.png')} style={{ width: 48, height: 48 }} resizeMode="contain" />
+              <EmotionAsset name="motivated" size={48} />
             </View>
           )}
           <Pressable onPress={handleSettingsPress} style={styles.settingsBadge} hitSlop={8}>
@@ -118,7 +120,7 @@ export default function ProfileScreen() {
           <MotiView key={emotion.id} from={{ opacity: 0, translateY: 5 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: staggerDelay(i, 500) }} style={{ width: '47%' }}>
           <Pressable style={styles.emotionCard}>
             <View style={styles.emotionIllustration}>
-              <Image source={emotion.image} style={{ width: 56, height: 56 }} resizeMode="contain" />
+              <EmotionAsset name={emotion.emotion} size={56} />
             </View>
             <Text style={styles.emotionName}>{emotion.name}</Text>
             <View style={styles.progressBar}>

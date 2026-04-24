@@ -7,6 +7,7 @@ import { Colors, Layout, Spacing, BorderRadius, Fonts } from '../../src/constant
 import { Button } from '../../src/components/Button';
 import { BackButton } from '../../src/components/BackButton';
 import { useUser } from '../../src/context/UserContext';
+import { EmotionAsset } from '../../src/components/EmotionAsset';
 
 export default function SettingsScreen() {
   const router = useRouter();
@@ -62,7 +63,7 @@ export default function SettingsScreen() {
               <Image source={{ uri: user.profileImage }} style={styles.avatarImage} />
             ) : (
               <View style={styles.avatarPlaceholder}>
-                <Image source={require('../../assets/emotions_png/motivated.png')} style={{ width: 48, height: 48 }} resizeMode="contain" />
+                <EmotionAsset name="motivated" size={48} />
               </View>
             )}
             <View style={styles.editBadge}>

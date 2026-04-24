@@ -6,7 +6,8 @@ import { MotiView } from 'moti';
 import { Colors, Spacing, BorderRadius, Fonts, Layout } from '../../src/constants/theme';
 import { SPRING_GENTLE, SPRING_BOUNCY, staggerDelay } from '../../src/constants/animations';
 import { Button } from '../../src/components/Button';
-import { EmotionAssets } from '../../src/constants/assets';
+import { EmotionAsset } from '../../src/components/EmotionAsset';
+import type { EmotionKey } from '../../src/constants/assets';
 
 // Step types
 type StepType = 'intro' | 'scenario' | 'critic' | 'choice' | 'insight';
@@ -15,7 +16,7 @@ interface Step {
   type: StepType;
   narration?: string;
   criticText?: string;
-  image?: any;
+  emotion?: EmotionKey;
   choices?: { text: string; feedback: string }[];
   insightTitle?: string;
   insightBody?: string;
@@ -25,15 +26,15 @@ const STEPS: Step[] = [
   // 0: Intro (handled separately)
   { type: 'intro' },
   // 1: Setup
-  { type: 'scenario', narration: 'You spent an hour editing a photo from your weekend. You post it, feeling good.', image: EmotionAssets.happy },
+  { type: 'scenario', narration: 'You spent an hour editing a photo from your weekend. You post it, feeling good.', emotion: 'happy' },
   // 2: Waiting
-  { type: 'scenario', narration: 'You check back 30 minutes later. 2 likes — both from family.', image: EmotionAssets.meh },
+  { type: 'scenario', narration: 'You check back 30 minutes later. 2 likes — both from family.', emotion: 'meh' },
   // 3: Comparison
-  { type: 'scenario', narration: 'You open Instagram and see your friend just posted. Already 47 likes. Your stomach drops.', image: EmotionAssets.jealous },
+  { type: 'scenario', narration: 'You open Instagram and see your friend just posted. Already 47 likes. Your stomach drops.', emotion: 'jealous' },
   // 4: Time passes
-  { type: 'scenario', narration: 'Two hours pass.', image: EmotionAssets.tired },
+  { type: 'scenario', narration: 'Two hours pass.', emotion: 'tired' },
   // 5: Best friend
-  { type: 'scenario', narration: "Your \"Best Friend\" has liked other people's posts, but completely ignored yours.", image: EmotionAssets.disappoint },
+  { type: 'scenario', narration: "Your \"Best Friend\" has liked other people's posts, but completely ignored yours.", emotion: 'disappoint' },
   // 6: Inner critic
   { type: 'critic', narration: 'Your Inner Critic starts screaming...', criticText: "They're over you. You're becoming irrelevant. Everyone thinks this post is cringe." },
   // 7: Choice
@@ -47,13 +48,13 @@ const STEPS: Step[] = [
     ],
   },
   // 8: Reframe
-  { type: 'scenario', narration: "You notice the tight feeling in your chest. That's your body telling you something. This feeling has a name — it's a mix of loneliness and self-doubt.", image: EmotionAssets.overwhelmed },
+  { type: 'scenario', narration: "You notice the tight feeling in your chest. That's your body telling you something. This feeling has a name — it's a mix of loneliness and self-doubt.", emotion: 'overwhelmed' },
   // 9: Insight
   {
     type: 'insight',
     insightTitle: 'You just met Loneliness',
     insightBody: "Loneliness often shows up when we feel invisible — especially online. It disguises itself as \"nobody cares\" but really it's saying \"I want to be seen.\" And that's completely valid.",
-    image: EmotionAssets.embarassed,
+    emotion: 'embarassed',
   },
 ];
 
@@ -110,7 +111,7 @@ export default function GhostedPostRP() {
           </MotiView>
 
           <MotiView from={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', ...SPRING_BOUNCY, delay: 50 }} style={styles.introImageContainer}>
-            <Image source={EmotionAssets.worried} style={styles.introImage} resizeMode="contain" />
+            <EmotionAsset name="worried" style={styles.introImage} />
           </MotiView>
 
           <View style={styles.sourceCard}>
@@ -211,10 +212,10 @@ export default function GhostedPostRP() {
           )}
 
           {/* Illustration */}
-          {currentStep.image && (
+          {currentStep.emotion && (
             <MotiView key={`img-${step}`} from={{ opacity: 0, translateY: 5 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: 50 }}>
               <View style={styles.illustrationContainer}>
-                <Image source={currentStep.image} style={styles.illustration} resizeMode="contain" />
+                <EmotionAsset name={currentStep.emotion} style={styles.illustration} />
               </View>
             </MotiView>
           )}

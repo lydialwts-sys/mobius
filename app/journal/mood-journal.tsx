@@ -3,20 +3,22 @@ import { View, Text, ScrollView, StyleSheet, Pressable, Image, Animated } from '
 import { useRouter, Stack } from 'expo-router';
 import { Colors, Layout, Spacing, Typography, BorderRadius, Fonts } from '../../src/constants/theme';
 import { BackButton } from '../../src/components/BackButton';
+import { EmotionAsset } from '../../src/components/EmotionAsset';
+import type { EmotionKey } from '../../src/constants/assets';
 
-const journalEntries = [
+const journalEntries: { month: string; entries: { id: string; date: string; vibe: string; emotion: EmotionKey }[] }[] = [
   {
     month: 'December',
     entries: [
-      { id: '1', date: 'Dec 16, 2025', vibe: 'Low-key stressed', image: require('../../assets/emotions_png/stress.png') },
-      { id: '2', date: 'Dec 12, 2025', vibe: 'Mid', image: require('../../assets/emotions_png/meh.png') },
-      { id: '3', date: 'Dec 10, 2025', vibe: 'Slayyyyyy', image: require('../../assets/emotions_png/motivated.png') },
+      { id: '1', date: 'Dec 16, 2025', vibe: 'Low-key stressed', emotion: 'stressed' },
+      { id: '2', date: 'Dec 12, 2025', vibe: 'Mid', emotion: 'meh' },
+      { id: '3', date: 'Dec 10, 2025', vibe: 'Slayyyyyy', emotion: 'motivated' },
     ],
   },
   {
     month: 'November',
     entries: [
-      { id: '4', date: 'Dec 01, 2025', vibe: 'Literally low-key', image: require('../../assets/emotions_png/tired.png') },
+      { id: '4', date: 'Dec 01, 2025', vibe: 'Literally low-key', emotion: 'tired' },
     ],
   },
 ];
@@ -74,7 +76,7 @@ export default function MoodJournalScreen() {
                         <Text style={styles.entryVibe}>{entry.vibe}</Text>
                       </View>
                       <View style={styles.entryImage}>
-                        <Image source={entry.image} style={{ width: 44, height: 44 }} resizeMode="contain" />
+                        <EmotionAsset name={entry.emotion} size={44} />
                       </View>
                     </Pressable>
                   </Animated.View>

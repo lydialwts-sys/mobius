@@ -6,12 +6,14 @@ import { Colors, Spacing, Typography, BorderRadius, Fonts } from '../../src/cons
 import { SPRING_GENTLE, SPRING_SNAPPY, staggerDelay } from '../../src/constants/animations';
 import { courses } from '../../src/data/mockData';
 import { useUser } from '../../src/context/UserContext';
+import { EmotionAsset } from '../../src/components/EmotionAsset';
+import type { EmotionKey } from '../../src/constants/assets';
 
-const emotionLessons = [
-  { id: 'calm-overwhelm', title: 'Calm\noverwhelm', progress: 0.7, image: require('../../assets/emotions_png/overwhelmed.png') },
-  { id: 'reframe-jealousy', title: 'Reframe\njealousy', progress: 0.5, image: require('../../assets/emotions_png/jealous.png') },
-  { id: 'let-go-guilt', title: 'Let go of\nguilt', progress: 0.3, image: require('../../assets/emotions_png/guilty.png') },
-  { id: 'move-past-embarrassment', title: 'Move past\nembarrass\n-ment', progress: 0.1, image: require('../../assets/emotions_png/embarassed.png') },
+const emotionLessons: { id: string; title: string; progress: number; emotion: EmotionKey }[] = [
+  { id: 'calm-overwhelm', title: 'Calm\noverwhelm', progress: 0.7, emotion: 'overwhelmed' },
+  { id: 'reframe-jealousy', title: 'Reframe\njealousy', progress: 0.5, emotion: 'jealous' },
+  { id: 'let-go-guilt', title: 'Let go of\nguilt', progress: 0.3, emotion: 'guilty' },
+  { id: 'move-past-embarrassment', title: 'Move past\nembarrass\n-ment', progress: 0.1, emotion: 'embarassed' },
 ];
 
 export default function HomeScreen() {
@@ -39,7 +41,7 @@ export default function HomeScreen() {
             <Text style={styles.greetingName}>{user.fullName}</Text>
           </View>
           <View style={styles.characterCircle}>
-            <Image source={require('../../assets/emotions_png/motivated.png')} style={styles.characterImage} resizeMode="contain" />
+            <EmotionAsset name="motivated" style={styles.characterImage} />
           </View>
         </View>
       </MotiView>
@@ -55,7 +57,7 @@ export default function HomeScreen() {
         onPress={handleContinuePress}
       >
         <View style={styles.continueIcon}>
-          <Image source={require('../../assets/emotions_png/overwhelmed.png')} style={{ width: 36, height: 36 }} resizeMode="contain" />
+          <EmotionAsset name="overwhelmed" size={81} />
         </View>
         <View style={styles.continueRight}>
           <Text style={styles.continueTitle}>{continueCourse.title}</Text>
@@ -91,7 +93,7 @@ export default function HomeScreen() {
             </View>
             {/* Doodle illustration */}
             <View style={styles.emotionIllustration}>
-              <Image source={lesson.image} style={{ width: 56, height: 56 }} resizeMode="contain" />
+              <EmotionAsset name={lesson.emotion} size={126} />
             </View>
           </Pressable>
           </MotiView>
@@ -139,8 +141,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   characterImage: {
-    width: 56,
-    height: 56,
+    width: 126,
+    height: 126,
   },
   sectionTitle: {
     fontSize: 20,
@@ -166,6 +168,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.brandLight,
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
   },
   continueRight: {
     flex: 1,
@@ -248,5 +251,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.brand,
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
   },
 });

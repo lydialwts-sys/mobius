@@ -5,6 +5,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { Colors, Layout, Spacing, Typography, BorderRadius, Fonts } from '../../src/constants/theme';
 import { Button } from '../../src/components/Button';
 import { useUser } from '../../src/context/UserContext';
+import { EmotionAsset } from '../../src/components/EmotionAsset';
+import type { EmotionKey } from '../../src/constants/assets';
 
 // Step 0: Landing
 // Step 1: Goal Setting
@@ -20,11 +22,11 @@ const goalOptions = [
   { emoji: '🪞', text: 'I want to know myself better' },
 ];
 
-const scenarioOptions = [
-  { id: 'school', label: 'At school', image: require('../../assets/emotions_png/stress.png') },
-  { id: 'family', label: 'With family', image: require('../../assets/emotions_png/worried.png') },
-  { id: 'friends', label: 'With friends', image: require('../../assets/emotions_png/happy.png') },
-  { id: 'scrolling', label: 'Scrolling', image: require('../../assets/emotions_png/bored.png') },
+const scenarioOptions: { id: string; label: string; emotion: EmotionKey }[] = [
+  { id: 'school', label: 'At school', emotion: 'stressed' },
+  { id: 'family', label: 'With family', emotion: 'worried' },
+  { id: 'friends', label: 'With friends', emotion: 'happy' },
+  { id: 'scrolling', label: 'Scrolling', emotion: 'bored' },
 ];
 
 const vibeOptions = [
@@ -57,7 +59,7 @@ export default function OnboardingScreen() {
       <View style={[styles.container, { backgroundColor: Colors.text }]}>
         <View style={styles.landingContent}>
           <View style={styles.landingCharacter}>
-            <Image source={require('../../assets/emotions_png/motivated.png')} style={{ width: 80, height: 80 }} resizeMode="contain" />
+            <EmotionAsset name="motivated" size={80} />
           </View>
           <Image source={require('../../assets/icon_wordmark.png')} style={styles.wordmarkImage} resizeMode="contain" />
           <Text style={styles.landingSubtitle}>Unlock your emotion learning{'\n'}journey today.</Text>
@@ -117,7 +119,7 @@ export default function OnboardingScreen() {
               onPress={() => setSelectedScenarios(prev => prev.includes(s.id) ? prev.filter(x => x !== s.id) : [...prev, s.id])}
             >
               <View style={styles.scenarioIllustration}>
-                <Image source={s.image} style={{ width: 48, height: 48 }} resizeMode="contain" />
+                <EmotionAsset name={s.emotion} size={48} />
               </View>
               <Text style={styles.scenarioLabel}>{s.label}</Text>
             </Pressable>
@@ -170,7 +172,7 @@ export default function OnboardingScreen() {
         </Pressable>
         <View style={styles.vibeResultContent}>
           <View style={styles.vibeResultCircle}>
-            <Image source={require('../../assets/emotions_png/motivated.png')} style={{ width: 80, height: 80 }} resizeMode="contain" />
+            <EmotionAsset name="motivated" size={80} />
           </View>
           <Text style={styles.vibeResultTitle}>
             {selectedVibe === 'Good vibes' ? "Love that energy! 🌟" :
@@ -203,7 +205,7 @@ export default function OnboardingScreen() {
       <View style={styles.profileCreator}>
         {/* Avatar */}
         <View style={styles.profileAvatar}>
-          <Image source={require('../../assets/emotions_png/motivated.png')} style={{ width: 56, height: 56 }} resizeMode="contain" />
+          <EmotionAsset name="motivated" size={56} />
         </View>
 
         {/* Name input */}

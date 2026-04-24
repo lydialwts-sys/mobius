@@ -7,7 +7,7 @@ import { Colors, Layout, Spacing, BorderRadius, Fonts } from '../../src/constant
 import { SPRING_BOUNCY, staggerDelay } from '../../src/constants/animations';
 import { BackButton } from '../../src/components/BackButton';
 import { CustomTabBar } from '../../src/components/CustomTabBar';
-import { EmotionAssets } from '../../src/constants/assets';
+import { EmotionAsset } from '../../src/components/EmotionAsset';
 import { chapters } from '../../src/data/mockData';
 
 export default function ChapterScreen() {
@@ -64,7 +64,7 @@ export default function ChapterScreen() {
                   ) : session.locked ? (
                     <Ionicons name="lock-closed" size={24} color={Colors.textSecondary} />
                   ) : (
-                    <Image source={EmotionAssets.motivated} style={{ width: 44, height: 44 }} resizeMode="contain" />
+                    <EmotionAsset name="motivated" size={44} />
                   )}
                 </View>
                 <View style={styles.nodeLabelPill}>

@@ -7,6 +7,7 @@ import { Colors, Layout, Spacing, Typography, BorderRadius, Fonts } from '../../
 import { SPRING_BOUNCY, staggerDelay } from '../../src/constants/animations';
 import { courses } from '../../src/data/mockData';
 import { BackButton } from '../../src/components/BackButton';
+import { EmotionAsset } from '../../src/components/EmotionAsset';
 
 export default function CourseDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -62,11 +63,7 @@ export default function CourseDetailScreen() {
                     {isCompleted ? (
                       <Text style={styles.checkmark}>✓</Text>
                     ) : isAvailable ? (
-                      <Image
-                        source={require('../../assets/emotions_png/motivated.png')}
-                        style={{ width: 44, height: 44 }}
-                        resizeMode="contain"
-                      />
+                      <EmotionAsset name="motivated" size={44} />
                     ) : (
                       <Ionicons name="lock-closed" size={24} color={Colors.textSecondary} />
                     )}

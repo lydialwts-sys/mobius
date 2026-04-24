@@ -6,7 +6,8 @@ import { Colors, Layout, Spacing, BorderRadius, Fonts } from '../../src/constant
 import { SPRING_GENTLE, SPRING_BOUNCY, staggerDelay } from '../../src/constants/animations';
 import { BackButton } from '../../src/components/BackButton';
 import { Button } from '../../src/components/Button';
-import { EmotionAssets, type EmotionKey } from '../../src/constants/assets';
+import { EmotionAsset } from '../../src/components/EmotionAsset';
+import { type EmotionKey } from '../../src/constants/assets';
 import { emotionIntros } from '../../src/data/mockData';
 
 export default function EmotionIntroScreen() {
@@ -18,7 +19,7 @@ export default function EmotionIntroScreen() {
     return <View style={styles.container}><Text>Emotion not found</Text></View>;
   }
 
-  const heroImage = EmotionAssets[emotion.imageKey as EmotionKey];
+  const heroKey = emotion.imageKey as EmotionKey;
 
   return (
     <>
@@ -32,7 +33,7 @@ export default function EmotionIntroScreen() {
           {/* Hero illustration */}
           <MotiView from={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', ...SPRING_BOUNCY }}>
             <View style={styles.heroContainer}>
-              <Image source={heroImage} style={styles.heroImage} resizeMode="contain" />
+              <EmotionAsset name={heroKey} style={styles.heroImage} />
             </View>
           </MotiView>
 
@@ -63,12 +64,12 @@ export default function EmotionIntroScreen() {
           </MotiView>
           <View style={styles.relatedGrid}>
             {emotion.relatedEmotions.map((rel, i) => {
-              const relImage = EmotionAssets[rel.imageKey as EmotionKey];
+              const relKey = rel.imageKey as EmotionKey;
               return (
                 <MotiView key={rel.name} from={{ opacity: 0, translateY: 8 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: staggerDelay(i, 600) }} style={{ width: '47%' }}>
                   <View style={styles.relatedCard}>
                     <View style={styles.relatedImageContainer}>
-                      <Image source={relImage} style={styles.relatedImage} resizeMode="contain" />
+                      <EmotionAsset name={relKey} style={styles.relatedImage} />
                     </View>
                     <Text style={styles.relatedName}>{rel.name}</Text>
                   </View>

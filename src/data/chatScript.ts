@@ -26,12 +26,14 @@ export const scriptedDialogue: ScriptedMessage[] = [
 ];
 
 // Exercise cards shown after dialogue (matching Figma "Chat 8 - Options")
+import type { EmotionKey } from '../constants/assets';
+
 export interface ExerciseOption {
   id: string;
   title: string;
   tag: string;
   duration: string;
-  image: any;
+  emotion: EmotionKey;
   clickable: boolean;
   route?: string;
 }
@@ -42,7 +44,7 @@ export const exerciseOptions: ExerciseOption[] = [
     title: 'Am I not\nenough?',
     tag: 'Jealousy',
     duration: '3 min',
-    image: require('../../assets/emotions_png/jealous.png'),
+    emotion: 'jealous',
     clickable: false,
   },
   {
@@ -50,7 +52,7 @@ export const exerciseOptions: ExerciseOption[] = [
     title: 'Silence\ninner critic',
     tag: 'Anxiety',
     duration: '3 min',
-    image: require('../../assets/emotions_png/overwhelmed.png'),
+    emotion: 'overwhelmed',
     clickable: true,
     route: '/course/silence-inner-critic',
   },
@@ -59,7 +61,7 @@ export const exerciseOptions: ExerciseOption[] = [
     title: "Respond,\ndon\u2019t react",
     tag: 'Angry',
     duration: '4 min',
-    image: require('../../assets/emotions_png/stress.png'),
+    emotion: 'stressed',
     clickable: false,
   },
 ];

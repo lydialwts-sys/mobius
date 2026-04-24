@@ -6,6 +6,7 @@ import { MotiView } from 'moti';
 import { Colors, Spacing, Typography, BorderRadius, Fonts, Layout } from '../../src/constants/theme';
 import { SPRING_BOUNCY, SPRING_GENTLE } from '../../src/constants/animations';
 import { useUser } from '../../src/context/UserContext';
+import { EmotionAsset } from '../../src/components/EmotionAsset';
 
 export default function ChatHomeScreen() {
   const router = useRouter();
@@ -22,11 +23,7 @@ export default function ChatHomeScreen() {
       <MotiView from={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', ...SPRING_BOUNCY, delay: 50 }}>
       <View style={styles.characterContainer}>
         <View style={styles.characterCircle}>
-          <Image
-            source={require('../../assets/emotions_png/happy.png')}
-            style={{ width: 120, height: 120 }}
-            resizeMode="contain"
-          />
+          <EmotionAsset name="happy" size={120} />
         </View>
       </View>
 

@@ -6,6 +6,8 @@ import Svg, { Path } from 'react-native-svg';
 import { Audio } from 'expo-av';
 import { Colors, Layout, Spacing, BorderRadius, Fonts } from '../../src/constants/theme';
 import { BackButton } from '../../src/components/BackButton';
+import { EmotionAsset } from '../../src/components/EmotionAsset';
+import type { EmotionKey } from '../../src/constants/assets';
 
 function MapPinIcon({ size = 16, color = '#000' }: { size?: number; color?: string }) {
   return (
@@ -15,29 +17,29 @@ function MapPinIcon({ size = 16, color = '#000' }: { size?: number; color?: stri
   );
 }
 
-function EmotionInline({ source, size = 28 }: { source: any; size?: number }) {
-  return <Image source={source} style={{ width: size, height: size, marginHorizontal: 2 }} resizeMode="contain" />;
+function EmotionInline({ name, size = 28 }: { name: EmotionKey; size?: number }) {
+  return <EmotionAsset name={name} style={{ width: size, height: size, marginHorizontal: 2 }} />;
 }
 
-const allEmotionStickers = [
-  { id: 'depressed', image: require('../../assets/emotions_png/depressed.png'), label: 'depressed' },
-  { id: 'overwhelmed', image: require('../../assets/emotions_png/overwhelmed.png'), label: 'overwhelmed' },
-  { id: 'chill', image: require('../../assets/emotions_png/chill.png'), label: 'chill' },
-  { id: 'motivated', image: require('../../assets/emotions_png/motivated.png'), label: 'motivated' },
-  { id: 'stressed', image: require('../../assets/emotions_png/stress.png'), label: 'stressed' },
-  { id: 'bored', image: require('../../assets/emotions_png/bored.png'), label: 'bored' },
-  { id: 'happy', image: require('../../assets/emotions_png/happy.png'), label: 'happy' },
-  { id: 'tired', image: require('../../assets/emotions_png/tired.png'), label: 'tired' },
-  { id: 'worried', image: require('../../assets/emotions_png/worried.png'), label: 'worried' },
-  { id: 'meh', image: require('../../assets/emotions_png/meh.png'), label: 'meh' },
-  { id: 'guilty', image: require('../../assets/emotions_png/guilty.png'), label: 'guilty' },
-  { id: 'scared', image: require('../../assets/emotions_png/scared.png'), label: 'scared' },
-  { id: 'jealous', image: require('../../assets/emotions_png/jealous.png'), label: 'jealous' },
-  { id: 'proud', image: require('../../assets/emotions_png/proud.png'), label: 'proud' },
-  { id: 'relaxed', image: require('../../assets/emotions_png/relaxed.png'), label: 'relaxed' },
-  { id: 'excited', image: require('../../assets/emotions_png/excited.png'), label: 'excited' },
-  { id: 'lost', image: require('../../assets/emotions_png/lost.png'), label: 'lost' },
-  { id: 'satisfied', image: require('../../assets/emotions_png/satisfied.png'), label: 'satisfied' },
+const allEmotionStickers: { id: string; emotion: EmotionKey; label: string }[] = [
+  { id: 'depressed', emotion: 'depressed', label: 'depressed' },
+  { id: 'overwhelmed', emotion: 'overwhelmed', label: 'overwhelmed' },
+  { id: 'chill', emotion: 'chill', label: 'chill' },
+  { id: 'motivated', emotion: 'motivated', label: 'motivated' },
+  { id: 'stressed', emotion: 'stressed', label: 'stressed' },
+  { id: 'bored', emotion: 'bored', label: 'bored' },
+  { id: 'happy', emotion: 'happy', label: 'happy' },
+  { id: 'tired', emotion: 'tired', label: 'tired' },
+  { id: 'worried', emotion: 'worried', label: 'worried' },
+  { id: 'meh', emotion: 'meh', label: 'meh' },
+  { id: 'guilty', emotion: 'guilty', label: 'guilty' },
+  { id: 'scared', emotion: 'scared', label: 'scared' },
+  { id: 'jealous', emotion: 'jealous', label: 'jealous' },
+  { id: 'proud', emotion: 'proud', label: 'proud' },
+  { id: 'relaxed', emotion: 'relaxed', label: 'relaxed' },
+  { id: 'excited', emotion: 'excited', label: 'excited' },
+  { id: 'lost', emotion: 'lost', label: 'lost' },
+  { id: 'satisfied', emotion: 'satisfied', label: 'satisfied' },
 ];
 
 const stickerFilters = ['Low-key', 'Meh', 'A Lot'];
@@ -179,16 +181,16 @@ export default function JournalEntryScreen() {
               <View style={styles.bodyTextContainer}>
                 <View style={styles.textRow}>
                   <Text style={styles.journalText}>Today just felt... off. </Text>
-                  <EmotionInline source={require('../../assets/emotions_png/depressed.png')} />
+                  <EmotionInline name="depressed" />
                 </View>
                 <View style={styles.textRow}>
                   <Text style={styles.journalText}>Nothing major happened but my brain</Text>
-                  <EmotionInline source={require('../../assets/emotions_png/overwhelmed.png')} size={24} />
+                  <EmotionInline name="overwhelmed" size={24} />
                   <Text style={styles.journalText}> keeps spiraling anyway.</Text>
                 </View>
                 <View style={styles.textRow}>
                   <Text style={styles.journalText}>Kinda tired of myself </Text>
-                  <EmotionInline source={require('../../assets/emotions_png/chill.png')} />
+                  <EmotionInline name="chill" />
                   <Text style={styles.journalText}> but also trying to be gentle about it.</Text>
                 </View>
               </View>
@@ -212,7 +214,7 @@ export default function JournalEntryScreen() {
               <View style={styles.stickerGrid}>
                 {allEmotionStickers.map((s) => (
                   <Pressable key={s.id} style={styles.stickerItem}>
-                    <Image source={s.image} style={styles.stickerImage} resizeMode="contain" />
+                    <EmotionAsset name={s.emotion} style={styles.stickerImage} />
                   </Pressable>
                 ))}
               </View>
@@ -227,7 +229,7 @@ export default function JournalEntryScreen() {
             <Text style={styles.toolbarLabel}>Image</Text>
           </Pressable>
           <Pressable style={styles.toolbarItem} onPress={() => setViewMode(viewMode === 'stickers' ? 'journal' : 'stickers')}>
-            <Image source={require('../../assets/emotions_png/depressed.png')} style={{ width: 24, height: 24 }} resizeMode="contain" />
+            <EmotionAsset name="depressed" size={24} />
             <Text style={styles.toolbarLabel}>Sticker</Text>
           </Pressable>
           <Pressable style={styles.toolbarItem}>

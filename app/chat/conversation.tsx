@@ -7,7 +7,7 @@ import { Colors, Spacing, BorderRadius, Fonts, Layout } from '../../src/constant
 import { SPRING_BOUNCY, SPRING_GENTLE, staggerDelay } from '../../src/constants/animations';
 import { scriptedDialogue, exerciseOptions, chatTopic, type ScriptedMessage } from '../../src/data/chatScript';
 import { CustomTabBar } from '../../src/components/CustomTabBar';
-import { EmotionAssets } from '../../src/constants/assets';
+import { EmotionAsset } from '../../src/components/EmotionAsset';
 
 export default function ConversationScreen() {
   const router = useRouter();
@@ -78,7 +78,7 @@ export default function ConversationScreen() {
             <View style={msg.role === 'user' ? styles.userRow : styles.aiRow}>
               {msg.role === 'ai' && (
                 <View style={styles.aiAvatar}>
-                  <Image source={EmotionAssets.happy} style={{ width: 24, height: 24 }} resizeMode="contain" />
+                  <EmotionAsset name="happy" size={24} />
                 </View>
               )}
               <View style={[styles.bubble, msg.role === 'user' ? styles.userBubble : styles.aiBubble]}>
@@ -93,7 +93,7 @@ export default function ConversationScreen() {
           <MotiView from={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ type: 'timing', duration: 200 }}>
             <View style={styles.aiRow}>
               <View style={styles.aiAvatar}>
-                <Image source={EmotionAssets.happy} style={{ width: 24, height: 24 }} resizeMode="contain" />
+                <EmotionAsset name="happy" size={24} />
               </View>
               <MotiView
                 from={{ opacity: 0.3 }}
@@ -130,7 +130,7 @@ export default function ConversationScreen() {
                     </View>
                     {/* Bottom half: image placeholder */}
                     <View style={styles.exerciseImageHalf}>
-                      <Image source={option.image} style={styles.exerciseImage} resizeMode="contain" />
+                      <EmotionAsset name={option.emotion} style={styles.exerciseImage} />
                     </View>
                   </Pressable>
                 </MotiView>
