@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, ScrollView, StyleSheet, Pressable, Image, Animated } from 'react-native';
-import { useRouter } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import { MotiView } from 'moti';
 import { Colors, Spacing, Typography, BorderRadius, Fonts } from '../../src/constants/theme';
 import { SPRING_GENTLE, SPRING_SNAPPY, staggerDelay } from '../../src/constants/animations';
@@ -8,15 +8,20 @@ import { courses } from '../../src/data/mockData';
 import { useUser } from '../../src/context/UserContext';
 
 const emotionLessons = [
-  { id: 'calm-overwhelm', title: 'Calm\noverwhelm', progress: 0.7, image: require('../../assets/emotions_png/overwhelmed.png') },
-  { id: 'reframe-jealousy', title: 'Reframe\njealousy', progress: 0.5, image: require('../../assets/emotions_png/jealous.png') },
-  { id: 'let-go-guilt', title: 'Let go of\nguilt', progress: 0.3, image: require('../../assets/emotions_png/guilty.png') },
-  { id: 'move-past-embarrassment', title: 'Move past\nembarrass\n-ment', progress: 0.1, image: require('../../assets/emotions_png/embarassed.png') },
+  { id: 'calm-overwhelm', title: 'Calm\noverwhelm', progress: 0.7, image: require('../../assets/in app_thumbnail/overwhelmed_thumbnail.gif') },
+  { id: 'reframe-jealousy', title: 'Reframe\njealousy', progress: 0.5, image: require('../../assets/in app_thumbnail/jealous_thumbnail.gif') },
+  { id: 'let-go-guilt', title: 'Let go of\nguilt', progress: 0.3, image: require('../../assets/in app_thumbnail/guilty_thumbnail.gif') },
+  { id: 'move-past-embarrassment', title: 'Move past\nembarrass\n-ment', progress: 0.1, image: require('../../assets/in app_thumbnail/embarassed_thumbnail_1.gif') },
 ];
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { user } = useUser();
+  const { user, onboarded } = useUser();
+
+  if (!onboarded) {
+    return <Redirect href="/onboarding" />;
+  }
+
   const continueCourse = courses[1]; // The ghosted post
   const cardScale = useRef(new Animated.Value(1)).current;
 
@@ -39,7 +44,11 @@ export default function HomeScreen() {
             <Text style={styles.greetingName}>{user.fullName}</Text>
           </View>
           <View style={styles.characterCircle}>
-            <Image source={require('../../assets/emotions_png/motivated.png')} style={styles.characterImage} resizeMode="contain" />
+            <Image
+              source={user.profileImage ? { uri: user.profileImage } : require('../../assets/in app_thumbnail/pfp.png')}
+              style={styles.characterImage}
+              resizeMode="cover"
+            />
           </View>
         </View>
       </MotiView>
@@ -54,9 +63,11 @@ export default function HomeScreen() {
         style={styles.continueCard}
         onPress={handleContinuePress}
       >
-        <View style={styles.continueIcon}>
-          <Image source={require('../../assets/emotions_png/overwhelmed.png')} style={{ width: 36, height: 36 }} resizeMode="contain" />
-        </View>
+        <Image
+          source={require('../../assets/in app_thumbnail/the ghosted post_thumbnail.png')}
+          style={styles.continueThumbnail}
+          resizeMode="contain"
+        />
         <View style={styles.continueRight}>
           <Text style={styles.continueTitle}>{continueCourse.title}</Text>
           <View style={styles.continueMetaRow}>
@@ -85,13 +96,8 @@ export default function HomeScreen() {
             onPress={() => router.push(`/course/${courses[0].id}`)}
           >
             <Text style={styles.emotionTitle}>{lesson.title}</Text>
-            {/* Progress bar */}
-            <View style={styles.emotionProgressBar}>
-              <View style={[styles.emotionProgressFill, { width: `${lesson.progress * 100}%` }]} />
-            </View>
-            {/* Doodle illustration */}
-            <View style={styles.emotionIllustration}>
-              <Image source={lesson.image} style={{ width: 56, height: 56 }} resizeMode="contain" />
+            <View style={styles.emotionImageWrap}>
+              <Image source={lesson.image} style={styles.emotionImage} resizeMode="contain" />
             </View>
           </Pressable>
           </MotiView>
@@ -139,8 +145,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   characterImage: {
-    width: 56,
-    height: 56,
+    width: 72,
+    height: 72,
   },
   sectionTitle: {
     fontSize: 20,
@@ -151,21 +157,18 @@ const styles = StyleSheet.create({
   continueCard: {
     flexDirection: 'row',
     backgroundColor: Colors.surface,
-    borderRadius: BorderRadius.md,
+    borderRadius: BorderRadius.lg,
     borderWidth: 1,
     borderColor: Colors.border,
-    padding: Spacing.lg,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.lg,
     gap: Spacing.lg,
     marginBottom: Spacing.xxxl,
     alignItems: 'center',
   },
-  continueIcon: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: Colors.brandLight,
-    alignItems: 'center',
-    justifyContent: 'center',
+  continueThumbnail: {
+    width: 80,
+    height: 80,
   },
   continueRight: {
     flex: 1,
@@ -213,40 +216,31 @@ const styles = StyleSheet.create({
   emotionCard: {
     aspectRatio: 0.85,
     backgroundColor: Colors.surface,
-    borderRadius: BorderRadius.md,
+    borderRadius: BorderRadius.lg,
     borderWidth: 1,
     borderColor: Colors.border,
-    padding: Spacing.lg,
     overflow: 'hidden',
   },
   emotionTitle: {
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 18,
+    lineHeight: 22,
     fontFamily: Fonts.bodySemiBold,
     color: Colors.text,
+    paddingTop: Spacing.lg,
+    paddingHorizontal: Spacing.lg,
+    width: '100%' as any,
   },
-  emotionProgressBar: {
-    height: 4,
-    backgroundColor: Colors.border,
-    borderRadius: 2,
-    overflow: 'hidden',
-    marginTop: Spacing.sm,
-    width: '60%',
-  },
-  emotionProgressFill: {
-    height: '100%',
-    backgroundColor: Colors.text,
-    borderRadius: 2,
-  },
-  emotionIllustration: {
+  emotionImageWrap: {
     position: 'absolute',
-    bottom: -4,
-    right: -4,
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: Colors.brand,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 110,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
+  },
+  emotionImage: {
+    width: '100%' as any,
+    height: '100%' as any,
   },
 });

@@ -8,6 +8,18 @@ import { SPRING_GENTLE, SPRING_BOUNCY, staggerDelay } from '../../src/constants/
 import { Button } from '../../src/components/Button';
 import { EmotionAssets } from '../../src/constants/assets';
 
+const GPAssets = {
+  header: require('../../assets/in app_thumbnail/the ghosted post_header.png'),
+  pathA1: require('../../assets/in app_thumbnail/the ghosted post_doodle_pathA_1.png'),
+  pathA2: require('../../assets/in app_thumbnail/the ghosted post_doodle_pathA_2.png'),
+  pathB1: require('../../assets/in app_thumbnail/the ghosted post_doodle_pathB_1.png'),
+  pathB2: require('../../assets/in app_thumbnail/the ghosted post_doodle_pathB_2.png'),
+  pathB3: require('../../assets/in app_thumbnail/the ghosted post_doodle_pathB_3.png'),
+  scenarioC: require('../../assets/in app_thumbnail/the ghosted post_doodle_scenarioC.png'),
+  ending1: require('../../assets/in app_thumbnail/the ghosted post_doodle_ending_1.png'),
+  ending2: require('../../assets/in app_thumbnail/the ghosted post_doodle_ending_2.png'),
+};
+
 // Step types
 type StepType = 'intro' | 'scenario' | 'critic' | 'choice' | 'insight';
 
@@ -25,15 +37,15 @@ const STEPS: Step[] = [
   // 0: Intro (handled separately)
   { type: 'intro' },
   // 1: Setup
-  { type: 'scenario', narration: 'You spent an hour editing a photo from your weekend. You post it, feeling good.', image: EmotionAssets.happy },
+  { type: 'scenario', narration: 'You spent an hour editing a photo from your weekend. You post it, feeling good.', image: GPAssets.pathA1 },
   // 2: Waiting
-  { type: 'scenario', narration: 'You check back 30 minutes later. 2 likes — both from family.', image: EmotionAssets.meh },
+  { type: 'scenario', narration: 'You check back 30 minutes later. 2 likes — both from family.', image: GPAssets.pathA2 },
   // 3: Comparison
-  { type: 'scenario', narration: 'You open Instagram and see your friend just posted. Already 47 likes. Your stomach drops.', image: EmotionAssets.jealous },
+  { type: 'scenario', narration: 'You open Instagram and see your friend just posted. Already 47 likes. Your stomach drops.', image: GPAssets.pathB1 },
   // 4: Time passes
-  { type: 'scenario', narration: 'Two hours pass.', image: EmotionAssets.tired },
+  { type: 'scenario', narration: 'Two hours pass.', image: GPAssets.pathB2 },
   // 5: Best friend
-  { type: 'scenario', narration: "Your \"Best Friend\" has liked other people's posts, but completely ignored yours.", image: EmotionAssets.disappoint },
+  { type: 'scenario', narration: "Your \"Best Friend\" has liked other people's posts, but completely ignored yours.", image: GPAssets.pathB3 },
   // 6: Inner critic
   { type: 'critic', narration: 'Your Inner Critic starts screaming...', criticText: "They're over you. You're becoming irrelevant. Everyone thinks this post is cringe." },
   // 7: Choice
@@ -47,13 +59,13 @@ const STEPS: Step[] = [
     ],
   },
   // 8: Reframe
-  { type: 'scenario', narration: "You notice the tight feeling in your chest. That's your body telling you something. This feeling has a name — it's a mix of loneliness and self-doubt.", image: EmotionAssets.overwhelmed },
+  { type: 'scenario', narration: "You notice the tight feeling in your chest. That's your body telling you something. This feeling has a name — it's a mix of loneliness and self-doubt.", image: GPAssets.scenarioC },
   // 9: Insight
   {
     type: 'insight',
     insightTitle: 'You just met Loneliness',
     insightBody: "Loneliness often shows up when we feel invisible — especially online. It disguises itself as \"nobody cares\" but really it's saying \"I want to be seen.\" And that's completely valid.",
-    image: EmotionAssets.embarassed,
+    image: GPAssets.ending1,
   },
 ];
 
@@ -110,7 +122,9 @@ export default function GhostedPostRP() {
           </MotiView>
 
           <MotiView from={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', ...SPRING_BOUNCY, delay: 50 }} style={styles.introImageContainer}>
-            <Image source={EmotionAssets.worried} style={styles.introImage} resizeMode="contain" />
+            <View style={styles.introImageFrame}>
+              <Image source={GPAssets.header} style={styles.introImage} resizeMode="contain" />
+            </View>
           </MotiView>
 
           <View style={styles.sourceCard}>
@@ -131,10 +145,35 @@ export default function GhostedPostRP() {
   }
 
   // --- SCENARIO / CRITIC / CHOICE / INSIGHT SCREENS ---
+  // Per-step image scale: step 1 & 2 → 0.8, step 3 → 0.6, step 8 → 0.7 (inline), others → 1
+  const scaleByStep: Record<number, number> = { 1: 0.8, 2: 0.8, 3: 0.6, 8: 0.7 };
+  const imageScale = scaleByStep[step] ?? 1;
+  const imageInline = step === 8;
+
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
       <View style={styles.container}>
+        {/* Lowest layer: bottom-anchored illustration (rendered first so it sits behind everything) */}
+        {currentStep.image && !imageInline && (
+          <MotiView
+            key={`img-${step}`}
+            from={{ opacity: 0, translateY: 5 }}
+            animate={{ opacity: 1, translateY: 0 }}
+            transition={{ type: 'spring', ...SPRING_GENTLE, delay: 50 }}
+            style={styles.illustrationContainer}
+            pointerEvents="none"
+          >
+            <View style={[styles.illustrationFrame, { width: `${imageScale * 100}%` as any }]}>
+              <Image
+                source={currentStep.image}
+                style={styles.illustration}
+                resizeMode="contain"
+              />
+            </View>
+          </MotiView>
+        )}
+
         {/* Header: back + progress + close */}
         <View style={styles.topBar}>
           <Pressable onPress={() => step > 1 ? setStep(s => s - 1) : setStep(0)} hitSlop={12}>
@@ -210,14 +249,25 @@ export default function GhostedPostRP() {
             </MotiView>
           )}
 
-          {/* Illustration */}
-          {currentStep.image && (
-            <MotiView key={`img-${step}`} from={{ opacity: 0, translateY: 5 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: 50 }}>
-              <View style={styles.illustrationContainer}>
-                <Image source={currentStep.image} style={styles.illustration} resizeMode="contain" />
+          {/* Inline illustration (only for step 8 — does not follow bottom-anchored rule) */}
+          {currentStep.image && imageInline && (
+            <MotiView
+              key={`img-inline-${step}`}
+              from={{ opacity: 0, translateY: 5 }}
+              animate={{ opacity: 1, translateY: 0 }}
+              transition={{ type: 'spring', ...SPRING_GENTLE, delay: 50 }}
+              style={styles.illustrationInline}
+            >
+              <View style={[styles.illustrationFrame, { width: `${imageScale * 100}%` as any }]}>
+                <Image
+                  source={currentStep.image}
+                  style={styles.illustration}
+                  resizeMode="contain"
+                />
               </View>
             </MotiView>
           )}
+
         </ScrollView>
 
         {/* Footer button */}
@@ -247,9 +297,10 @@ const styles = StyleSheet.create({
   introLabel: { fontFamily: Fonts.bodyMedium, fontSize: 14, color: Colors.textSecondary },
   introTitle: { fontFamily: Fonts.heading, fontSize: 32, color: Colors.text, marginBottom: Spacing.sm, lineHeight: 40 },
   introTag: { fontFamily: Fonts.bodyMedium, fontSize: 16, color: Colors.primary, marginBottom: Spacing.lg },
-  introDesc: { fontFamily: Fonts.body, fontSize: 16, lineHeight: 26, color: Colors.text, marginBottom: Spacing.xxl },
-  introImageContainer: { alignItems: 'center', marginBottom: Spacing.xxl },
-  introImage: { width: 200, height: 200 },
+  introDesc: { fontFamily: Fonts.body, fontSize: 16, lineHeight: 26, color: Colors.text, marginBottom: 10 },
+  introImageContainer: { alignItems: 'center', marginTop: 0, marginBottom: 10 },
+  introImageFrame: { width: '100%' as any, aspectRatio: 488 / 403 },
+  introImage: { width: '100%' as any, height: '100%' as any },
   sourceCard: { backgroundColor: Colors.surface, borderRadius: BorderRadius.md, borderWidth: 1, borderColor: Colors.border, padding: Spacing.lg, marginBottom: Spacing.xxl },
   sourceLabel: { fontFamily: Fonts.bodySemiBold, fontSize: 12, color: Colors.primary, marginBottom: Spacing.xs },
   sourceText: { fontFamily: Fonts.bodyMedium, fontSize: 14, color: Colors.text, marginBottom: 2 },
@@ -266,7 +317,7 @@ const styles = StyleSheet.create({
   progressSeg: { flex: 1, height: 4, borderRadius: 2, backgroundColor: Colors.border },
   progressSegFilled: { backgroundColor: Colors.text },
 
-  stepContent: { paddingHorizontal: Spacing.xxl, paddingBottom: 120 },
+  stepContent: { paddingHorizontal: Spacing.xxl, paddingBottom: 400 },
   sectionLabel: { fontFamily: Fonts.bodySemiBold, fontSize: 20, color: Colors.text, marginBottom: Spacing.lg },
   narrativeCard: { backgroundColor: Colors.borderLight, borderRadius: BorderRadius.lg, padding: Spacing.lg, marginBottom: Spacing.lg },
   narrativeText: { fontFamily: Fonts.body, fontSize: 16, lineHeight: 26, color: Colors.text },
@@ -290,10 +341,18 @@ const styles = StyleSheet.create({
   insightTitle: { fontFamily: Fonts.heading, fontSize: 24, color: Colors.textLight, marginBottom: Spacing.md },
   insightBody: { fontFamily: Fonts.body, fontSize: 16, lineHeight: 26, color: 'rgba(255,255,255,0.85)' },
 
-  // Illustration
-  illustrationContainer: { alignItems: 'center', paddingVertical: Spacing.lg },
-  illustration: { width: 180, height: 180 },
+  // Illustration (bottom-anchored, full screen width — lowest layer)
+  illustrationContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: 'center',
+  },
+  illustrationFrame: { aspectRatio: 437 / 637 },
+  illustration: { width: '100%' as any, height: '100%' as any },
+  illustrationInline: { alignItems: 'center', marginTop: Spacing.lg },
 
   // Footer
-  footer: { position: 'absolute', bottom: 0, left: 0, right: 0, paddingHorizontal: Spacing.xxl, paddingBottom: Spacing.xxxl, paddingTop: Spacing.lg, backgroundColor: '#F9F9F9' },
+  footer: { position: 'absolute', bottom: 0, left: 0, right: 0, paddingHorizontal: Spacing.xxl, paddingBottom: Spacing.xxxl, paddingTop: Spacing.lg },
 });

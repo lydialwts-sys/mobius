@@ -64,7 +64,7 @@ export default function ChapterScreen() {
                   ) : session.locked ? (
                     <Ionicons name="lock-closed" size={24} color={Colors.textSecondary} />
                   ) : (
-                    <Image source={EmotionAssets.motivated} style={{ width: 44, height: 44 }} resizeMode="contain" />
+                    <Image source={session.thumbnail ?? EmotionAssets.motivated} style={{ width: 64, height: 64 }} resizeMode="contain" />
                   )}
                 </View>
                 <View style={styles.nodeLabelPill}>

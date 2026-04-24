@@ -64,13 +64,11 @@ export default function ProfileScreen() {
         </View>
         {/* Avatar with settings icon overlapping top-right */}
         <View style={styles.avatarContainer}>
-          {user.profileImage ? (
-            <Image source={{ uri: user.profileImage }} style={styles.avatarImg} />
-          ) : (
-            <View style={styles.avatar}>
-              <Image source={require('../../assets/emotions_png/motivated.png')} style={{ width: 48, height: 48 }} resizeMode="contain" />
-            </View>
-          )}
+          <Image
+            source={user.profileImage ? { uri: user.profileImage } : require('../../assets/in app_thumbnail/pfp.png')}
+            style={styles.avatarImg}
+            resizeMode="cover"
+          />
           <Pressable onPress={handleSettingsPress} style={styles.settingsBadge} hitSlop={8}>
             <Animated.View style={{ transform: [{ rotate: spin }] }}>
               <SettingsIcon size={24} />

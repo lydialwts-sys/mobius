@@ -8,6 +8,8 @@ interface UserState {
 
 interface UserContextType {
   user: UserState;
+  onboarded: boolean;
+  setOnboarded: (value: boolean) => void;
   setFullName: (name: string) => void;
   setProfileImage: (uri: string | null) => void;
   logout: () => void;
@@ -21,6 +23,8 @@ const defaultUser: UserState = {
 
 const UserContext = createContext<UserContextType>({
   user: defaultUser,
+  onboarded: false,
+  setOnboarded: () => {},
   setFullName: () => {},
   setProfileImage: () => {},
   logout: () => {},
@@ -28,6 +32,7 @@ const UserContext = createContext<UserContextType>({
 
 export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserState>(defaultUser);
+  const [onboarded, setOnboarded] = useState(false);
 
   const setFullName = (name: string) => {
     const first = name.split(' ')[0] || name;
@@ -40,10 +45,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const logout = () => {
     setUser(defaultUser);
+    setOnboarded(false);
   };
 
   return (
-    <UserContext.Provider value={{ user, setFullName, setProfileImage, logout }}>
+    <UserContext.Provider value={{ user, onboarded, setOnboarded, setFullName, setProfileImage, logout }}>
       {children}
     </UserContext.Provider>
   );

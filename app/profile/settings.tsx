@@ -58,13 +58,11 @@ export default function SettingsScreen() {
         {/* Profile picture */}
         <View style={styles.avatarSection}>
           <Pressable onPress={handlePickImage} style={styles.avatarWrapper}>
-            {user.profileImage ? (
-              <Image source={{ uri: user.profileImage }} style={styles.avatarImage} />
-            ) : (
-              <View style={styles.avatarPlaceholder}>
-                <Image source={require('../../assets/emotions_png/motivated.png')} style={{ width: 48, height: 48 }} resizeMode="contain" />
-              </View>
-            )}
+            <Image
+              source={user.profileImage ? { uri: user.profileImage } : require('../../assets/in app_thumbnail/pfp.png')}
+              style={styles.avatarImage}
+              resizeMode="cover"
+            />
             <View style={styles.editBadge}>
               <Ionicons name="camera" size={14} color={Colors.textLight} />
             </View>

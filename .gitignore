@@ -39,3 +39,6 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# Source video files (gif versions are committed instead)
+assets/in app_thumbnail/*.mov

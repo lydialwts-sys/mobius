@@ -63,8 +63,8 @@ export default function CourseDetailScreen() {
                       <Text style={styles.checkmark}>✓</Text>
                     ) : isAvailable ? (
                       <Image
-                        source={require('../../assets/emotions_png/motivated.png')}
-                        style={{ width: 44, height: 44 }}
+                        source={lesson.thumbnail ?? require('../../assets/emotions_png/motivated.png')}
+                        style={{ width: 60, height: 60 }}
                         resizeMode="contain"
                       />
                     ) : (

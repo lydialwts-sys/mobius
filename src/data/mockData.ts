@@ -15,6 +15,8 @@ export interface LessonStep {
   options?: string[];
   correctAnswer?: number;
   characterId?: string;
+  image?: any;
+  imageAspect?: number; // width / height of natural PNG, used by View-wrapper
 }
 
 export interface Lesson {
@@ -23,6 +25,7 @@ export interface Lesson {
   subtitle: string;
   steps: LessonStep[];
   completed: boolean;
+  thumbnail?: any;
 }
 
 export interface Course {
@@ -83,11 +86,12 @@ export const courses: Course[] = [
         title: 'Meet Your Inner Critic',
         subtitle: 'Everyone has one — let\'s get to know yours',
         completed: true,
+        thumbnail: require('../../assets/in app_thumbnail/silence_the_inner_critique_thumbnail.png'),
         steps: [
-          { id: 's1', type: 'info', title: 'What is the Inner Critic?', content: 'Your inner critic is that voice in your head that tells you you\'re not good enough. It might say things like "you\'re so dumb" or "everyone is judging you." The thing is — almost everyone has one.' },
-          { id: 's2', type: 'info', title: 'Where Does It Come From?', content: 'Your inner critic often develops from past experiences — maybe a harsh teacher, social media comparisons, or pressure to be perfect. It thinks it\'s protecting you, but it usually just makes you feel worse.' },
-          { id: 's3', type: 'quiz', title: 'Quick Check', content: 'Which of these is something your inner critic might say?', options: ['"I should try my best"', '"I\'m such a failure"', '"That was a good effort"', '"I\'ll do better next time"'], correctAnswer: 1 },
-          { id: 's4', type: 'character-reveal', title: 'You\'ve met Self-Doubt!', content: 'Self-Doubt is that cloudy feeling that makes everything seem harder than it is. Now that you can recognize it, you can start to manage it.', characterId: 'self-doubt' },
+          { id: 's1', type: 'info', title: 'What is the Inner Critic?', content: 'Your inner critic is that voice in your head that tells you you\'re not good enough. It might say things like "you\'re so dumb" or "everyone is judging you." The thing is — almost everyone has one.', image: require('../../assets/in app_thumbnail/silence_the_inner_critique_header.png'), imageAspect: 488 / 403 },
+          { id: 's2', type: 'info', title: 'Where Does It Come From?', content: 'Your inner critic often develops from past experiences — maybe a harsh teacher, social media comparisons, or pressure to be perfect. It thinks it\'s protecting you, but it usually just makes you feel worse.', image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path A_option 1.png'), imageAspect: 150 / 141 },
+          { id: 's3', type: 'quiz', title: 'Quick Check', content: 'Which of these is something your inner critic might say?', options: ['"I should try my best"', '"I\'m such a failure"', '"That was a good effort"', '"I\'ll do better next time"'], correctAnswer: 1, image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path A_option 2.png'), imageAspect: 263 / 148 },
+          { id: 's4', type: 'character-reveal', title: 'You\'ve met Self-Doubt!', content: 'Self-Doubt is that cloudy feeling that makes everything seem harder than it is. Now that you can recognize it, you can start to manage it.', characterId: 'self-doubt', image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path A_reveal.png'), imageAspect: 501 / 549 },
         ],
       },
       {
@@ -95,11 +99,12 @@ export const courses: Course[] = [
         title: 'Spotting the Pattern',
         subtitle: 'Notice when your critic shows up',
         completed: true,
+        thumbnail: require('../../assets/in app_thumbnail/silence_the_inner_critique_thumbnail.png'),
         steps: [
-          { id: 's1', type: 'info', title: 'Common Triggers', content: 'Your inner critic loves to show up during specific moments: before a test, after posting on social media, when comparing yourself to friends, or when you make a mistake.' },
-          { id: 's2', type: 'reflection', title: 'Think About It', content: 'When was the last time your inner critic was really loud? What triggered it?' },
-          { id: 's3', type: 'info', title: 'The Pattern', content: 'Trigger → Thought → Feeling → Behavior. When you can spot the trigger, you can interrupt the pattern before it spirals.' },
-          { id: 's4', type: 'quiz', title: 'Check Your Understanding', content: 'What\'s the first step to managing your inner critic?', options: ['Ignoring it completely', 'Recognizing when it shows up', 'Being harder on yourself', 'Avoiding all triggers'], correctAnswer: 1 },
+          { id: 's1', type: 'info', title: 'Common Triggers', content: 'Your inner critic loves to show up during specific moments: before a test, after posting on social media, when comparing yourself to friends, or when you make a mistake.', image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path A_option 3.png'), imageAspect: 257 / 167 },
+          { id: 's2', type: 'reflection', title: 'Think About It', content: 'When was the last time your inner critic was really loud? What triggered it?', image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path A_success.png'), imageAspect: 451 / 398 },
+          { id: 's3', type: 'info', title: 'The Pattern', content: 'Trigger → Thought → Feeling → Behavior. When you can spot the trigger, you can interrupt the pattern before it spirals.', image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path B_option 1.png'), imageAspect: 134 / 172 },
+          { id: 's4', type: 'quiz', title: 'Check Your Understanding', content: 'What\'s the first step to managing your inner critic?', options: ['Ignoring it completely', 'Recognizing when it shows up', 'Being harder on yourself', 'Avoiding all triggers'], correctAnswer: 1, image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path b_option 2.png'), imageAspect: 175 / 153 },
         ],
       },
       {
@@ -107,11 +112,12 @@ export const courses: Course[] = [
         title: 'Talk Back to It',
         subtitle: 'Reframe negative self-talk',
         completed: false,
+        thumbnail: require('../../assets/in app_thumbnail/silence_the_inner_critique_thumbnail.png'),
         steps: [
-          { id: 's1', type: 'info', title: 'The Reframe Technique', content: 'Instead of fighting your inner critic, try reframing what it says. "I\'m so stupid" becomes "I\'m still learning." "Everyone hates me" becomes "I\'m having a rough day."' },
-          { id: 's2', type: 'info', title: 'Talk to Yourself Like a Friend', content: 'Would you say these things to your best friend? Probably not. Try talking to yourself the way you\'d talk to someone you care about.' },
-          { id: 's3', type: 'reflection', title: 'Practice', content: 'Take a harsh thought you\'ve had recently and try to reframe it. What would you say to a friend in the same situation?' },
-          { id: 's4', type: 'quiz', title: 'Reframe This', content: 'How could you reframe "I always mess everything up"?', options: ['"It\'s true, I do"', '"I made a mistake, and that\'s okay"', '"I should never try new things"', '"Other people mess up more"'], correctAnswer: 1 },
+          { id: 's1', type: 'info', title: 'The Reframe Technique', content: 'Instead of fighting your inner critic, try reframing what it says. "I\'m so stupid" becomes "I\'m still learning." "Everyone hates me" becomes "I\'m having a rough day."', image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path B_option 3.png'), imageAspect: 177 / 147 },
+          { id: 's2', type: 'info', title: 'Talk to Yourself Like a Friend', content: 'Would you say these things to your best friend? Probably not. Try talking to yourself the way you\'d talk to someone you care about.', image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path B_insights.png'), imageAspect: 489 / 412 },
+          { id: 's3', type: 'reflection', title: 'Practice', content: 'Take a harsh thought you\'ve had recently and try to reframe it. What would you say to a friend in the same situation?', image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path B_insights_2.png'), imageAspect: 307 / 383 },
+          { id: 's4', type: 'quiz', title: 'Reframe This', content: 'How could you reframe "I always mess everything up"?', options: ['"It\'s true, I do"', '"I made a mistake, and that\'s okay"', '"I should never try new things"', '"Other people mess up more"'], correctAnswer: 1, image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path B_success.png'), imageAspect: 304 / 344 },
         ],
       },
       { id: 'sic-4', title: 'The Self-Compassion Break', subtitle: 'Be kind to yourself in tough moments', completed: false, steps: [] },
@@ -163,6 +169,7 @@ export interface ChapterSession {
   route: string;
   locked: boolean;
   completed: boolean;
+  thumbnail?: any;
 }
 
 export interface Chapter {
@@ -178,9 +185,9 @@ export const chapters: Chapter[] = [
     title: 'Ease Anxiety',
     emotionId: 'anxiety',
     sessions: [
-      { id: 'meet-anxiety', title: 'Meet Anxiety', route: '/emotion/anxiety', locked: false, completed: false },
-      { id: 'silence-inner-critic', title: 'Silence the inner critique', route: '/course/silence-inner-critic', locked: false, completed: false },
-      { id: 'ghosted-post', title: 'The ghosted post', route: '/roleplay/ghosted-post', locked: false, completed: false },
+      { id: 'meet-anxiety', title: 'Meet Anxiety', route: '/emotion/anxiety', locked: false, completed: false, thumbnail: require('../../assets/in app_thumbnail/meet_anxiety_thumbnail.png') },
+      { id: 'silence-inner-critic', title: 'Silence the inner critique', route: '/course/silence-inner-critic', locked: false, completed: false, thumbnail: require('../../assets/in app_thumbnail/silence_the_inner_critique_thumbnail.png') },
+      { id: 'ghosted-post', title: 'The ghosted post', route: '/roleplay/ghosted-post', locked: false, completed: false, thumbnail: require('../../assets/in app_thumbnail/the ghosted post_thumbnail.png') },
     ],
   },
 ];

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Pressable, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ScrollView, Image } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { Colors, Spacing, Typography, BorderRadius } from '../../../src/constants/theme';
 import { Button } from '../../../src/components/Button';
@@ -49,6 +49,15 @@ export default function LessonScreen() {
     <>
       <Stack.Screen options={{ title: lesson.title }} />
       <View style={styles.container}>
+        {/* Bottom-anchored step illustration (lowest layer) */}
+        {step.image && (
+          <View style={styles.stepImageContainer} pointerEvents="none">
+            <View style={[styles.stepImageFrame, { aspectRatio: step.imageAspect ?? 1 }]}>
+              <Image source={step.image} style={styles.stepImage} resizeMode="contain" />
+            </View>
+          </View>
+        )}
+
         {/* Progress */}
         <View style={styles.progressRow}>
           {lesson.steps.map((_, i) => (
@@ -143,4 +152,13 @@ const styles = StyleSheet.create({
   characterDescription: { ...Typography.body, textAlign: 'center', color: Colors.textSecondary, lineHeight: 24 },
   footer: { padding: Spacing.lg, paddingBottom: Spacing.xxxl, alignItems: 'center', gap: Spacing.sm },
   stepCounter: { ...Typography.small },
+
+  // Step illustration (bottom-anchored, lowest layer — playbook pattern)
+  stepImageContainer: {
+    position: 'absolute',
+    left: 0, right: 0, bottom: 0,
+    alignItems: 'center',
+  },
+  stepImageFrame: { width: '70%' as any },
+  stepImage: { width: '100%' as any, height: '100%' as any },
 });
