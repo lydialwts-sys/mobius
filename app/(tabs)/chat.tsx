@@ -13,36 +13,44 @@ export default function ChatHomeScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
+      {/* Hamburger top bar */}
       <View style={styles.topBar}>
         <Ionicons name="menu" size={28} color={Colors.text} />
       </View>
 
-      {/* Character */}
-      <MotiView from={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', ...SPRING_BOUNCY, delay: 50 }}>
-      <View style={styles.characterContainer}>
-        <View style={styles.characterCircle}>
-          <Image
-            source={require('../../assets/emotions_png/happy.png')}
-            style={{ width: 120, height: 120 }}
-            resizeMode="contain"
-          />
+      {/* AI character — full sun. On mount: subtle upward motion (10% of sun height = ~90px) + fade in. */}
+      <MotiView
+        from={{ opacity: 0, translateY: 180 }}
+        animate={{ opacity: 1, translateY: 90 }}
+        transition={{
+          opacity: { type: 'timing', duration: 600 },
+          translateY: { type: 'spring', ...SPRING_GENTLE, delay: 50 },
+        }}
+        style={styles.characterContainer}
+        pointerEvents="none"
+      >
+        <Image
+          source={require('../../assets/in app_thumbnail/AI Agent_wake up.gif')}
+          style={styles.aiCharacter}
+          resizeMode="contain"
+        />
+      </MotiView>
+
+      {/* Greeting — very subtle: fade in + ~5% upward motion (small offset) */}
+      <MotiView
+        from={{ opacity: 0, translateY: 18 }}
+        animate={{ opacity: 1, translateY: 0 }}
+        transition={{
+          opacity: { type: 'timing', duration: 700, delay: 250 },
+          translateY: { type: 'timing', duration: 700, delay: 250 },
+        }}
+        style={styles.greetingWrap}
+      >
+        <View style={styles.greetingContainer}>
+          <Text style={styles.greeting}>Good afternoon, {user.firstName}</Text>
+          <Text style={styles.subtitle}>What's going on?</Text>
         </View>
-      </View>
-
       </MotiView>
-
-      {/* Greeting */}
-      <MotiView from={{ opacity: 0, translateY: 6 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: 75 }}>
-      <View style={styles.greetingContainer}>
-        <Text style={styles.greeting}>Good afternoon, {user.firstName}</Text>
-        <Text style={styles.subtitle}>What's going on?</Text>
-      </View>
-
-      </MotiView>
-
-      {/* Spacer */}
-      <View style={{ flex: 1 }} />
 
       {/* Input bar */}
       <View style={styles.inputBar}>
@@ -75,27 +83,30 @@ const styles = StyleSheet.create({
   topBar: {
     paddingHorizontal: Spacing.xxl,
     paddingTop: Layout.statusBarOffset,
-    paddingBottom: Spacing.lg,
+    paddingBottom: Spacing.sm,
   },
+  // Sun centered on the screen — translateY (1300px down) is applied via Moti's animate prop
+  // so it doesn't get overridden by Moti's auto-generated transform
   characterContainer: {
+    position: 'absolute',
+    top: 0, bottom: 0, left: 0, right: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: Spacing.xl,
   },
-  characterCircle: {
-    width: 220,
-    height: 220,
-    borderRadius: 110,
-    backgroundColor: Colors.brand,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: Colors.text,
-    overflow: 'hidden',
+  // Sun scaled to 907 (756 + 20%)
+  aiCharacter: {
+    width: 907,
+    height: 907,
+  },
+  // Greeting wrapper sits above the centered sun (foreground)
+  // marginTop:auto pushes it to the bottom; marginBottom adds 100px of space above the input bar
+  greetingWrap: {
+    marginTop: 'auto' as any,
+    marginBottom: 100,
   },
   greetingContainer: {
     alignItems: 'center',
-    paddingTop: Spacing.xxxl,
+    paddingTop: Spacing.lg,
     gap: Spacing.sm,
   },
   greeting: {

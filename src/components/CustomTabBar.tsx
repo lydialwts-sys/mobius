@@ -10,10 +10,12 @@ interface Props {
   active: ActiveTab;
 }
 
-const tabs: { key: ActiveTab; label: string; route: string }[] = [
-  { key: 'learn', label: 'Learn', route: '/(tabs)' },
-  { key: 'chat', label: 'Chat', route: '/(tabs)/chat' },
-  { key: 'profile', label: 'Profile', route: '/(tabs)/profile' },
+// Per-tab active label color matches the corresponding Selected icon's stroke color in Figma.
+// Profile uses a softer navy (#364F90); Learn/Chat use the primary blue (#002FA7).
+const tabs: { key: ActiveTab; label: string; route: string; activeColor: string }[] = [
+  { key: 'learn', label: 'Learn', route: '/(tabs)', activeColor: Colors.primary },
+  { key: 'chat', label: 'Chat', route: '/(tabs)/chat', activeColor: Colors.primary },
+  { key: 'profile', label: 'Profile', route: '/(tabs)/profile', activeColor: Colors.tabActive },
 ];
 
 function TabIcon({ tab, active }: { tab: ActiveTab; active: boolean }) {
@@ -34,7 +36,7 @@ export function CustomTabBar({ active }: Props) {
         return (
           <Pressable key={tab.key} style={styles.item} onPress={() => !isActive && router.replace(tab.route as any)}>
             <TabIcon tab={tab.key} active={isActive} />
-            <Text style={[styles.label, isActive && styles.labelActive]}>{tab.label}</Text>
+            <Text style={[styles.label, isActive && { color: tab.activeColor }]}>{tab.label}</Text>
           </Pressable>
         );
       })}
@@ -54,5 +56,4 @@ const styles = StyleSheet.create({
   },
   item: { alignItems: 'center', gap: Spacing.xs },
   label: { fontFamily: Fonts.bodyMedium, fontSize: 11, color: Colors.dark },
-  labelActive: { color: Colors.primary },
 });

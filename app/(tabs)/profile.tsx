@@ -8,21 +8,25 @@ import { SPRING_GENTLE, staggerDelay } from '../../src/constants/animations';
 import { SettingsIcon } from '../../src/components/SettingsIcon';
 import { useUser } from '../../src/context/UserContext';
 
+// Mood week — picks character thumbnails per day (variety of emotion gifs from /asset/in app_thumbnail)
 const weekMoods = [
-  { day: 'S', emoji: '😊' },
-  { day: 'M', emoji: '😰' },
-  { day: 'T', emoji: '😢' },
-  { day: 'W', emoji: '😌' },
-  { day: 'T', emoji: '😊' },
-  { day: 'F', emoji: '😤' },
-  { day: 'S', emoji: '😊' },
+  { day: 'S', image: require('../../assets/in app_thumbnail/mood journal_slay_thumbnail.gif') },
+  { day: 'M', image: require('../../assets/in app_thumbnail/mood_journal_lowkey_stressed_thumbnail_1.gif') },
+  { day: 'T', image: require('../../assets/in app_thumbnail/guilty_thumbnail.gif') },
+  { day: 'W', image: require('../../assets/in app_thumbnail/quiet processor.gif') },
+  { day: 'T', image: require('../../assets/in app_thumbnail/mood journal_literally_lowkey_thumbnail_1.gif') },
+  { day: 'F', image: require('../../assets/in app_thumbnail/overwhelmed_thumbnail.gif') },
+  { day: 'S', image: require('../../assets/in app_thumbnail/embarassed_thumbnail_1.gif') },
 ];
 
-const emotionCards = [
-  { id: 'overwhelmed', name: 'Overwhelmed', progress: 0.7, image: require('../../assets/emotions_png/overwhelmed.png') },
-  { id: 'jealousy', name: 'Jealousy', progress: 0.5, image: require('../../assets/emotions_png/jealous.png') },
-  { id: 'guilty', name: 'Guilty', progress: 0.3, image: require('../../assets/emotions_png/guilty.png') },
-  { id: 'embarrassed', name: 'Embarrassed', progress: 0.1, image: require('../../assets/emotions_png/embarassed.png') },
+// Emotion cards — Figma profile layout: doodle on TOP, name centered below, then progress bar at BOTTOM.
+// Note: Figma uses adjective form "Jealous" (not "Jealousy") for this card.
+type EmotionCard = { id: string; name: string; progress: number; image: any; route?: string };
+const emotionCards: EmotionCard[] = [
+  { id: 'overwhelmed', name: 'Overwhelmed', progress: 0.7, image: require('../../assets/in app_thumbnail/overwhelmed_thumbnail.gif'), route: '/emotion/anxiety' },
+  { id: 'jealous', name: 'Jealous', progress: 0.5, image: require('../../assets/in app_thumbnail/jealous_thumbnail.gif') },
+  { id: 'guilty', name: 'Guilty', progress: 0.3, image: require('../../assets/in app_thumbnail/guilty_thumbnail.gif') },
+  { id: 'embarrassed', name: 'Embarrassed', progress: 0.1, image: require('../../assets/in app_thumbnail/embarassed_thumbnail_1.gif') },
 ];
 
 const filterTags = [
@@ -62,13 +66,17 @@ export default function ProfileScreen() {
             <Text style={styles.badgeText}>Quiet observer</Text>
           </View>
         </View>
-        {/* Avatar with settings icon overlapping top-right */}
+        {/* Avatar with settings icon overlapping top-right.
+            Frame: solid white circle + 1px gray border (matches mood-circle / emotion-card style).
+            pfp.png is the doodle inside, contained so the white background shows. */}
         <View style={styles.avatarContainer}>
-          <Image
-            source={user.profileImage ? { uri: user.profileImage } : require('../../assets/in app_thumbnail/pfp.png')}
-            style={styles.avatarImg}
-            resizeMode="cover"
-          />
+          <View style={styles.avatarFrame}>
+            <Image
+              source={user.profileImage ? { uri: user.profileImage } : require('../../assets/in app_thumbnail/pfp.png')}
+              style={styles.avatarImg}
+              resizeMode="contain"
+            />
+          </View>
           <Pressable onPress={handleSettingsPress} style={styles.settingsBadge} hitSlop={8}>
             <Animated.View style={{ transform: [{ rotate: spin }] }}>
               <SettingsIcon size={24} />
@@ -88,7 +96,9 @@ export default function ProfileScreen() {
         {weekMoods.map((mood, i) => (
           <MotiView key={i} from={{ opacity: 0, translateY: 8 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: staggerDelay(i, 200) }}>
             <View style={styles.moodDay}>
-              <Text style={styles.moodEmoji}>{mood.emoji}</Text>
+              <View style={styles.moodCircle}>
+                <Image source={mood.image} style={styles.moodThumb} resizeMode="contain" />
+              </View>
               <Text style={styles.moodDayLabel}>{mood.day}</Text>
             </View>
           </MotiView>
@@ -96,7 +106,7 @@ export default function ProfileScreen() {
       </View>
 
       {/* Learn emotions */}
-      <Text style={styles.sectionTitle}>Learn emotions</Text>
+      <Text style={[styles.sectionTitle, styles.learnEmotionsTitle]}>Learn emotions</Text>
 
       {/* Filter tags */}
       <View style={styles.filterRow}>
@@ -110,19 +120,23 @@ export default function ProfileScreen() {
         ))}
       </View>
 
-      {/* Emotion cards grid */}
+      {/* Emotion cards grid — Figma profile layout: doodle TOP (fills upper portion), name CENTER,
+          progress bar at BOTTOM. Per-card optional `route` enables navigation. */}
       <View style={styles.emotionGrid}>
         {emotionCards.map((emotion, i) => (
-          <MotiView key={emotion.id} from={{ opacity: 0, translateY: 5 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: staggerDelay(i, 500) }} style={{ width: '47%' }}>
-          <Pressable style={styles.emotionCard}>
-            <View style={styles.emotionIllustration}>
-              <Image source={emotion.image} style={{ width: 56, height: 56 }} resizeMode="contain" />
-            </View>
-            <Text style={styles.emotionName}>{emotion.name}</Text>
-            <View style={styles.progressBar}>
-              <View style={[styles.progressFill, { width: `${emotion.progress * 100}%` }]} />
-            </View>
-          </Pressable>
+          <MotiView key={emotion.id} from={{ opacity: 0, translateY: 5 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'spring', ...SPRING_GENTLE, delay: staggerDelay(i, 500) }} style={{ width: '48%' }}>
+            <Pressable
+              style={styles.emotionCard}
+              onPress={() => emotion.route && router.push(emotion.route as any)}
+            >
+              <View style={styles.emotionImageWrap} pointerEvents="none">
+                <Image source={emotion.image} style={styles.emotionImage} resizeMode="contain" />
+              </View>
+              <Text style={styles.emotionName}>{emotion.name}</Text>
+              <View style={styles.progressBar}>
+                <View style={[styles.progressFill, { width: `${emotion.progress * 100}%` }]} />
+              </View>
+            </Pressable>
           </MotiView>
         ))}
       </View>
@@ -150,9 +164,21 @@ const styles = StyleSheet.create({
   avatarContainer: {
     position: 'relative',
   },
+  // White circle frame matching mood-circle / emotion-card style (1px gray border, white bg)
+  avatarFrame: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
   avatarImg: {
-    width: 64, height: 64, borderRadius: 32,
-    borderWidth: 2, borderColor: Colors.text,
+    width: 56,
+    height: 56,
   },
   settingsBadge: {
     position: 'absolute',
@@ -171,9 +197,9 @@ const styles = StyleSheet.create({
     color: Colors.text,
   },
   badge: {
-    backgroundColor: Colors.primary,
-    paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.xs,
+    backgroundColor: Colors.dark,
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.sm,
     borderRadius: BorderRadius.pill,
     alignSelf: 'flex-start',
   },
@@ -181,17 +207,6 @@ const styles = StyleSheet.create({
     ...Typography.small,
     color: Colors.textLight,
     fontFamily: Fonts.bodyMedium,
-  },
-  avatar: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: Colors.brand,
-    borderWidth: 2,
-    borderColor: Colors.text,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -204,6 +219,10 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.bodySemiBold,
     color: Colors.text,
     marginBottom: Spacing.md,
+  },
+  // 2x the gap below "Learn emotions" specifically (overrides sectionTitle marginBottom)
+  learnEmotionsTitle: {
+    marginBottom: Spacing.xxl,
   },
   moreLink: {
     ...Typography.caption,
@@ -220,8 +239,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: Spacing.xs,
   },
-  moodEmoji: {
-    fontSize: 22,
+  // Solid white circle behind each daily mood thumbnail (same style as emotion cards: 1px border)
+  moodCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  moodThumb: {
+    width: 36,
+    height: 36,
   },
   moodDayLabel: {
     ...Typography.small,
@@ -244,8 +276,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   filterTagActive: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
+    backgroundColor: Colors.dark,
+    borderColor: Colors.dark,
   },
   filterTagText: {
     ...Typography.small,
@@ -257,39 +289,46 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: Spacing.md,
   },
+  // Figma profile card: doodle TOP (large), name CENTER, progress bar BOTTOM
   emotionCard: {
+    aspectRatio: 0.95,
     backgroundColor: Colors.surface,
-    borderRadius: BorderRadius.md,
+    borderRadius: BorderRadius.lg,
     borderWidth: 1,
     borderColor: Colors.border,
-    padding: Spacing.lg,
-    alignItems: 'center',
-    gap: Spacing.sm,
+    overflow: 'hidden',
+    paddingVertical: Spacing.lg,
   },
-  emotionIllustration: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: Colors.brand,
+  // Doodle takes the upper ~62% of the card (flex: 1 inside the padded column)
+  emotionImageWrap: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    overflow: 'hidden',
+    paddingHorizontal: Spacing.md,
+  },
+  emotionImage: {
+    width: '100%' as any,
+    height: '100%' as any,
   },
   emotionName: {
-    fontFamily: Fonts.bodyMedium,
     fontSize: 14,
+    fontFamily: Fonts.bodySemiBold,
     color: Colors.text,
+    paddingHorizontal: Spacing.lg,
+    marginBottom: Spacing.sm,
+    marginTop: Spacing.xs,
   },
+  // Thicker progress bar per Figma — bottom of card
   progressBar: {
-    width: '100%',
-    height: 4,
+    height: 6,
+    marginHorizontal: Spacing.lg,
     backgroundColor: Colors.border,
-    borderRadius: 2,
+    borderRadius: 3,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
     backgroundColor: Colors.text,
-    borderRadius: 2,
+    borderRadius: 3,
   },
 });

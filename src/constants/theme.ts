@@ -11,6 +11,8 @@ export const Fonts = {
 export const Colors = {
   primary: '#002FA7',
   primaryLight: '#002FA710',
+  // Bottom tab bar active color (Figma profile board: Profile label = #364F90)
+  tabActive: '#364F90',
   brand: '#EAB308',
   brandLight: '#EAB30820',
   background: '#F6F5F2',
