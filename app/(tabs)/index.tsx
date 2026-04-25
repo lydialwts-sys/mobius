@@ -47,7 +47,7 @@ export default function HomeScreen() {
             <Image
               source={user.profileImage ? { uri: user.profileImage } : require('../../assets/in app_thumbnail/pfp.png')}
               style={styles.characterImage}
-              resizeMode="cover"
+              resizeMode="contain"
             />
           </View>
         </View>
@@ -135,18 +135,21 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.heading,
     color: Colors.text,
   },
+  // White circle frame matching emotion-card / mood-circle style (1px gray border, white bg)
   characterCircle: {
     width: 72,
     height: 72,
     borderRadius: 36,
-    backgroundColor: Colors.brand,
+    backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: Colors.border,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
   },
   characterImage: {
-    width: 72,
-    height: 72,
+    width: 64,
+    height: 64,
   },
   sectionTitle: {
     fontSize: 20,
