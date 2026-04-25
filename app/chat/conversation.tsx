@@ -7,7 +7,6 @@ import { Colors, Spacing, BorderRadius, Fonts, Layout } from '../../src/constant
 import { SPRING_BOUNCY, SPRING_GENTLE, staggerDelay } from '../../src/constants/animations';
 import { scriptedDialogue, exerciseOptions, chatTopic, type ScriptedMessage } from '../../src/data/chatScript';
 import { CustomTabBar } from '../../src/components/CustomTabBar';
-import { EmotionAssets } from '../../src/constants/assets';
 
 export default function ConversationScreen() {
   const router = useRouter();
@@ -59,13 +58,13 @@ export default function ConversationScreen() {
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={90}>
-      {/* Header */}
+      {/* Header — no bottom border, image icon on right per Figma */}
       <View style={styles.header}>
         <Pressable onPress={() => router.back()} hitSlop={12}>
           <Ionicons name="menu" size={24} color={Colors.text} />
         </Pressable>
         <Text style={styles.headerTitle}>{chatTopic}</Text>
-        <Ionicons name="chatbubble" size={20} color={Colors.text} />
+        <Ionicons name="image-outline" size={22} color={Colors.text} />
       </View>
 
       {/* Messages */}
@@ -77,9 +76,7 @@ export default function ConversationScreen() {
             transition={{ type: 'spring', ...SPRING_GENTLE }}>
             <View style={msg.role === 'user' ? styles.userRow : styles.aiRow}>
               {msg.role === 'ai' && (
-                <View style={styles.aiAvatar}>
-                  <Image source={EmotionAssets.happy} style={{ width: 24, height: 24 }} resizeMode="contain" />
-                </View>
+                <Image source={require('../../assets/in app_thumbnail/AI chat bubble_icon.png')} style={styles.aiAvatar} resizeMode="contain" />
               )}
               <View style={[styles.bubble, msg.role === 'user' ? styles.userBubble : styles.aiBubble]}>
                 <Text style={[styles.bubbleText, msg.role === 'user' ? styles.userText : styles.aiText]}>{msg.content}</Text>
@@ -88,54 +85,62 @@ export default function ConversationScreen() {
           </MotiView>
         ))}
 
-        {/* Fix #2: Single typing indicator — no duplicate dots */}
+        {/* Typing indicator — bouncing avatar + "Thinking..." italic per Figma */}
         {isTypingIndicator && (
           <MotiView from={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ type: 'timing', duration: 200 }}>
             <View style={styles.aiRow}>
-              <View style={styles.aiAvatar}>
-                <Image source={EmotionAssets.happy} style={{ width: 24, height: 24 }} resizeMode="contain" />
-              </View>
+              {/* Subtle ball-bounce on the avatar while loading */}
               <MotiView
-                from={{ opacity: 0.3 }}
-                animate={{ opacity: 1 }}
-                transition={{ type: 'timing', duration: 600, loop: true }}
+                from={{ translateY: 0 }}
+                animate={{ translateY: -4 }}
+                transition={{ type: 'timing', duration: 500, loop: true, repeatReverse: true }}
               >
-                <Text style={styles.typingText}>•••</Text>
+                <Image source={require('../../assets/in app_thumbnail/AI chat bubble_icon.png')} style={styles.aiAvatar} resizeMode="contain" />
+              </MotiView>
+              <MotiView
+                from={{ opacity: 0.5 }}
+                animate={{ opacity: 1 }}
+                transition={{ type: 'timing', duration: 800, loop: true }}
+              >
+                <Text style={styles.thinkingText}>Thinking...</Text>
               </MotiView>
             </View>
           </MotiView>
         )}
 
-        {/* Exercise option cards (Figma Chat 8 - Options: horizontal card row) */}
+        {/* Exercise option cards (Figma Chat 8 - Options: full-color card with integrated doodle) */}
         {showOptions && (
           <View style={styles.optionsWrapper}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.optionsRow}>
-              {exerciseOptions.map((option, i) => (
-                <MotiView key={option.id} from={{ opacity: 0, translateY: 8 }} animate={{ opacity: 1, translateY: 0 }}
-                  transition={{ type: 'timing', duration: 400, delay: 50 + i * 80 }}>
-                  <Pressable
-                    style={[
-                      styles.exerciseCard,
-                      option.clickable ? styles.exerciseCardActive : styles.exerciseCardInactive,
-                    ]}
-                    onPress={() => { if (option.clickable && option.route) router.push(option.route as any); }}
-                  >
-                    {/* Top half: text */}
-                    <View style={[styles.exerciseTextHalf, option.clickable ? styles.exerciseTextActive : styles.exerciseTextInactive]}>
-                      <Text style={[styles.exerciseTitle, option.clickable && styles.exerciseTitleActive]}>{option.title}</Text>
+              {exerciseOptions.map((option, i) => {
+                const isNavy = option.variant === 'navy';
+                return (
+                  <MotiView key={option.id} from={{ opacity: 0, translateY: 8 }} animate={{ opacity: 1, translateY: 0 }}
+                    transition={{ type: 'timing', duration: 400, delay: 50 + i * 80 }}>
+                    <Pressable
+                      style={[styles.exerciseCard, isNavy ? styles.exerciseCardNavy : styles.exerciseCardCream]}
+                      onPress={() => { if (option.clickable && option.route) router.push(option.route as any); }}
+                    >
+                      <Text style={[styles.exerciseTitle, isNavy && styles.exerciseTitleOnNavy]}>{option.title}</Text>
                       <View style={styles.exerciseMetaRow}>
-                        <Text style={[styles.exerciseTag, option.clickable && styles.exerciseTagActive]}>{option.tag}</Text>
-                        <Text style={[styles.exerciseDuration, option.clickable && styles.exerciseDurationActive]}>{option.duration}</Text>
+                        <Text style={[styles.exerciseTag, isNavy && styles.exerciseTagOnNavy]}>{option.tag}</Text>
+                        <Text style={[styles.exerciseDuration, isNavy && styles.exerciseDurationOnNavy]}>{option.duration}</Text>
                       </View>
-                    </View>
-                    {/* Bottom half: image placeholder */}
-                    <View style={styles.exerciseImageHalf}>
-                      <Image source={option.image} style={styles.exerciseImage} resizeMode="contain" />
-                    </View>
-                  </Pressable>
-                </MotiView>
-              ))}
+                      <View style={styles.exerciseImageWrap} pointerEvents="none">
+                        <View style={styles.exerciseImageBg}>
+                          <Image source={option.image} style={styles.exerciseImage} resizeMode="contain" />
+                        </View>
+                      </View>
+                    </Pressable>
+                  </MotiView>
+                );
+              })}
             </ScrollView>
+            {/* Retry link below cards */}
+            <Pressable style={styles.retryRow} onPress={() => { setShowOptions(false); }}>
+              <Ionicons name="refresh" size={16} color={Colors.textSecondary} />
+              <Text style={styles.retryText}>Retry</Text>
+            </Pressable>
           </View>
         )}
       </ScrollView>
@@ -178,61 +183,68 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: Spacing.xxl, paddingTop: Layout.statusBarOffset, paddingBottom: Spacing.md,
-    borderBottomWidth: 1, borderBottomColor: Colors.border, backgroundColor: Colors.background,
+    backgroundColor: Colors.background,
   },
   headerTitle: { fontFamily: Fonts.bodySemiBold, fontSize: 18, color: Colors.text },
   messages: { flex: 1 },
   messagesContent: { paddingVertical: Spacing.lg, paddingHorizontal: Spacing.lg },
 
   userRow: { flexDirection: 'row', justifyContent: 'flex-end', marginBottom: Spacing.md },
-  aiRow: { flexDirection: 'row', justifyContent: 'flex-start', marginBottom: Spacing.md, gap: Spacing.sm },
-  aiAvatar: { width: 32, height: 32, borderRadius: 16, backgroundColor: Colors.brand, alignItems: 'center', justifyContent: 'center', marginTop: Spacing.xs },
+  aiRow: { flexDirection: 'row', justifyContent: 'flex-start', marginBottom: Spacing.md, gap: Spacing.sm, alignItems: 'flex-start' },
+  // AI avatar: yellow sun-with-face icon (per Figma — same on every AI message)
+  aiAvatar: { width: 32, height: 32, marginTop: 2 },
 
   bubble: { maxWidth: '78%', paddingHorizontal: Spacing.lg, paddingVertical: Spacing.md, borderRadius: BorderRadius.lg },
-  userBubble: { backgroundColor: Colors.surface, borderWidth: 1, borderColor: Colors.border, borderTopRightRadius: BorderRadius.sm },
-  aiBubble: { backgroundColor: 'transparent' },
+  // User bubble: white fill with subtle border for visibility on cream bg
+  userBubble: { backgroundColor: Colors.surface, borderWidth: 1, borderColor: Colors.border },
+  aiBubble: { backgroundColor: 'transparent', paddingHorizontal: 0, paddingVertical: 4 },
   bubbleText: { fontFamily: Fonts.body, fontSize: 16, lineHeight: 24 },
   userText: { color: Colors.text },
   aiText: { color: Colors.text },
 
-  // Fix #2: Single clean typing indicator
-  typingText: { fontFamily: Fonts.body, fontSize: 22, color: Colors.textSecondary, letterSpacing: 3 },
+  // "Thinking..." italic text indicator
+  thinkingText: { fontFamily: Fonts.body, fontSize: 16, color: Colors.textSecondary, fontStyle: 'italic', marginTop: 6 },
 
-  // Exercise option cards (Figma Chat 8 - Options)
+  // Exercise option cards (Figma Chat 8 - Options) — full-color card with integrated doodle at bottom
   optionsWrapper: { marginTop: Spacing.md, marginLeft: 40 },
   optionsRow: { gap: Spacing.md, paddingVertical: Spacing.sm, paddingRight: Spacing.lg },
   exerciseCard: {
-    width: 160, height: 220,
+    width: 160, height: 210,
     borderRadius: BorderRadius.lg,
-    borderWidth: 1,
-    borderColor: Colors.cardBorder,
+    padding: Spacing.lg,
     overflow: 'hidden',
   },
-  exerciseCardActive: { /* clickable — blue top */ },
-  exerciseCardInactive: { /* not clickable — cream top */ },
-  // Top half: text area
-  exerciseTextHalf: {
-    flex: 1, padding: Spacing.lg, justifyContent: 'space-between',
-  },
-  exerciseTextActive: { backgroundColor: Colors.primary },
-  exerciseTextInactive: { backgroundColor: Colors.cardInactive },
+  exerciseCardCream: { backgroundColor: Colors.cardInactive },
+  exerciseCardNavy: { backgroundColor: Colors.primary },
   exerciseTitle: {
     fontFamily: Fonts.heading, fontSize: 20, lineHeight: 26,
     color: Colors.text,
+    marginBottom: Spacing.xs,
   },
-  exerciseTitleActive: { color: '#FFFFFF' },
+  exerciseTitleOnNavy: { color: '#FFFFFF' },
   exerciseMetaRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   exerciseTag: { fontFamily: Fonts.body, fontSize: 13, color: Colors.text },
-  exerciseTagActive: { color: 'rgba(255,255,255,0.8)' },
+  exerciseTagOnNavy: { color: 'rgba(255,255,255,0.85)' },
   exerciseDuration: { fontFamily: Fonts.body, fontSize: 13, color: Colors.textSecondary },
-  exerciseDurationActive: { color: 'rgba(255,255,255,0.6)' },
-  // Bottom half: image
-  exerciseImageHalf: {
-    flex: 1, backgroundColor: Colors.background,
-    alignItems: 'center', justifyContent: 'flex-end',
-    overflow: 'hidden',
+  exerciseDurationOnNavy: { color: 'rgba(255,255,255,0.6)' },
+  // Doodle sits on a full-width white pad anchored to the bottom edge of the card.
+  // Pad has a fixed height; image fills the pad completely (full width + full height).
+  exerciseImageWrap: {
+    position: 'absolute',
+    left: 0, right: 0, bottom: 0,
+    height: 90,
   },
-  exerciseImage: { width: 120, height: 110 },
+  exerciseImageBg: {
+    flex: 1,
+    backgroundColor: Colors.surface,
+  },
+  exerciseImage: { width: '100%' as any, height: '100%' as any },
+  // Retry below the card row
+  retryRow: {
+    flexDirection: 'row', alignItems: 'center', gap: Spacing.xs,
+    alignSelf: 'flex-end', paddingTop: Spacing.sm, paddingRight: Spacing.lg,
+  },
+  retryText: { fontFamily: Fonts.bodyMedium, fontSize: 13, color: Colors.textSecondary },
 
   // Recording
   recordingBar: { paddingHorizontal: Spacing.lg, paddingVertical: Spacing.md, alignItems: 'center', gap: Spacing.sm },

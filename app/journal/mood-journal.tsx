@@ -3,20 +3,23 @@ import { View, Text, ScrollView, StyleSheet, Pressable, Image, Animated } from '
 import { useRouter, Stack } from 'expo-router';
 import { Colors, Layout, Spacing, Typography, BorderRadius, Fonts } from '../../src/constants/theme';
 import { BackButton } from '../../src/components/BackButton';
+import { CustomTabBar } from '../../src/components/CustomTabBar';
 
+// Per Figma: each entry uses a character GIF doodle (no circle background) — same vocabulary
+// as the profile mood-week thumbnails.
 const journalEntries = [
   {
     month: 'December',
     entries: [
-      { id: '1', date: 'Dec 16, 2025', vibe: 'Low-key stressed', image: require('../../assets/emotions_png/stress.png') },
-      { id: '2', date: 'Dec 12, 2025', vibe: 'Mid', image: require('../../assets/emotions_png/meh.png') },
-      { id: '3', date: 'Dec 10, 2025', vibe: 'Slayyyyyy', image: require('../../assets/emotions_png/motivated.png') },
+      { id: '1', date: 'Dec 16, 2025', vibe: 'Low-key stressed', image: require('../../assets/in app_thumbnail/mood_journal_lowkey_stressed_thumbnail_1.gif') },
+      { id: '2', date: 'Dec 12, 2025', vibe: 'Mid', image: require('../../assets/in app_thumbnail/mood_journal_mid_thumbnail.gif') },
+      { id: '3', date: 'Dec 10, 2025', vibe: 'Slayyyyyy', image: require('../../assets/in app_thumbnail/mood journal_slay_thumbnail.gif') },
     ],
   },
   {
     month: 'November',
     entries: [
-      { id: '4', date: 'Dec 01, 2025', vibe: 'Literally low-key', image: require('../../assets/emotions_png/tired.png') },
+      { id: '4', date: 'Dec 01, 2025', vibe: 'Literally low-key', image: require('../../assets/in app_thumbnail/mood journal_literally_lowkey_thumbnail_1.gif') },
     ],
   },
 ];
@@ -49,9 +52,9 @@ export default function MoodJournalScreen() {
     <>
       <Stack.Screen options={{ headerShown: false }} />
       <View style={styles.container}>
-        {/* Top bar */}
+        {/* Top bar — back arrow always returns to the Profile tab */}
         <View style={styles.topBar}>
-          <BackButton fallbackRoute="/(tabs)/profile" />
+          <BackButton onPress={() => router.replace('/(tabs)/profile')} />
         </View>
 
         <ScrollView contentContainerStyle={styles.content}>
@@ -73,9 +76,8 @@ export default function MoodJournalScreen() {
                         <Text style={styles.entryVibeLabel}>Vibe of the day:</Text>
                         <Text style={styles.entryVibe}>{entry.vibe}</Text>
                       </View>
-                      <View style={styles.entryImage}>
-                        <Image source={entry.image} style={{ width: 44, height: 44 }} resizeMode="contain" />
-                      </View>
+                      {/* Doodle floats free, no circle background per Figma */}
+                      <Image source={entry.image} style={styles.entryDoodle} resizeMode="contain" />
                     </Pressable>
                   </Animated.View>
                 );
@@ -83,6 +85,7 @@ export default function MoodJournalScreen() {
             </View>
           ))}
         </ScrollView>
+        <CustomTabBar active="profile" />
       </View>
     </>
   );
@@ -147,13 +150,10 @@ const styles = StyleSheet.create({
     color: Colors.text,
     marginTop: 2,
   },
-  entryImage: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: Colors.brandLight,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
+  // Free-floating character doodle (no circle background) — large per Figma
+  entryDoodle: {
+    width: 88,
+    height: 88,
+    marginLeft: Spacing.md,
   },
 });

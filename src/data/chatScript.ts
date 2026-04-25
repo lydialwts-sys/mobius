@@ -34,6 +34,8 @@ export interface ExerciseOption {
   image: any;
   clickable: boolean;
   route?: string;
+  // Visual variant per Figma: cream = light card, navy = dark card with white text
+  variant: 'cream' | 'navy';
 }
 
 export const exerciseOptions: ExerciseOption[] = [
@@ -42,24 +44,27 @@ export const exerciseOptions: ExerciseOption[] = [
     title: 'Am I not\nenough?',
     tag: 'Jealousy',
     duration: '3 min',
-    image: require('../../assets/emotions_png/jealous.png'),
+    image: require('../../assets/in app_thumbnail/chat_card_jealousy.png'),
     clickable: false,
+    variant: 'cream',
   },
   {
     id: 'quiet-critic',
     title: 'Silence\ninner critic',
     tag: 'Anxiety',
     duration: '3 min',
-    image: require('../../assets/emotions_png/overwhelmed.png'),
+    image: require('../../assets/in app_thumbnail/chat_card_anxiety.png'),
     clickable: true,
     route: '/course/silence-inner-critic',
+    variant: 'navy',
   },
   {
     id: 'respond-react',
     title: "Respond,\ndon\u2019t react",
     tag: 'Angry',
     duration: '4 min',
-    image: require('../../assets/emotions_png/stress.png'),
+    image: require('../../assets/in app_thumbnail/chat_card_angry.png'),
     clickable: false,
+    variant: 'navy',
   },
 ];

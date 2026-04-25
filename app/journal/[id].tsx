@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, ScrollView, StyleSheet, Pressable, Image, TextInput, Animated, Dimensions } from 'react-native';
-import { useLocalSearchParams, Stack } from 'expo-router';
+import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import Svg, { Path } from 'react-native-svg';
 import { Audio } from 'expo-av';
@@ -15,7 +15,8 @@ function MapPinIcon({ size = 16, color = '#000' }: { size?: number; color?: stri
   );
 }
 
-function EmotionInline({ source, size = 28 }: { source: any; size?: number }) {
+// Inline doodle stickers — smaller per Figma so they sit cleanly on the text baseline
+function EmotionInline({ source, size = 18 }: { source: any; size?: number }) {
   return <Image source={source} style={{ width: size, height: size, marginHorizontal: 2 }} resizeMode="contain" />;
 }
 
@@ -51,6 +52,7 @@ const WAVEFORM_BARS = Array.from({ length: 40 }, (_, i) => {
 type ViewMode = 'journal' | 'stickers';
 
 export default function JournalEntryScreen() {
+  const router = useRouter();
   const [viewMode, setViewMode] = useState<ViewMode>('journal');
   const [stickerSearch, setStickerSearch] = useState('');
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
@@ -117,7 +119,8 @@ export default function JournalEntryScreen() {
       <Stack.Screen options={{ headerShown: false }} />
       <Animated.View style={[styles.container, { transform: [{ scale }], opacity }]}>
         <View style={styles.topBar}>
-          <BackButton />
+          {/* Back button always returns to the Mood Journal list (overrides browser history) */}
+          <BackButton onPress={() => router.replace('/journal/mood-journal')} />
         </View>
 
         <View style={styles.dateHeader}>
@@ -183,7 +186,7 @@ export default function JournalEntryScreen() {
                 </View>
                 <View style={styles.textRow}>
                   <Text style={styles.journalText}>Nothing major happened but my brain</Text>
-                  <EmotionInline source={require('../../assets/emotions_png/overwhelmed.png')} size={24} />
+                  <EmotionInline source={require('../../assets/emotions_png/overwhelmed.png')} />
                   <Text style={styles.journalText}> keeps spiraling anyway.</Text>
                 </View>
                 <View style={styles.textRow}>
@@ -195,9 +198,12 @@ export default function JournalEntryScreen() {
             </View>
           ) : (
             <View style={styles.stickerContent}>
+              {/* Sticker panel — matches Figma "mood journal_low-key stressed_emoji":
+                  no header, search → filters → 4-col grid of free-floating stickers.
+                  Tap the Sticker icon in the toolbar again to return to journal view. */}
               <View style={styles.searchBar}>
                 <Ionicons name="search" size={18} color={Colors.textTertiary} />
-                <TextInput style={styles.searchInput} placeholder="Search stickers" placeholderTextColor={Colors.textTertiary} value={stickerSearch} onChangeText={setStickerSearch} />
+                <TextInput style={styles.searchInput} placeholder="" value={stickerSearch} onChangeText={setStickerSearch} />
               </View>
               <View style={styles.filterRow}>
                 <Pressable style={[styles.filterTag, styles.filterTagActive]}>
@@ -272,19 +278,22 @@ const styles = StyleSheet.create({
   contentPadding: { paddingHorizontal: Spacing.xxl, paddingBottom: 100 },
   journalContent: { gap: Spacing.xl },
 
-  // Bento box: main left tall, right column with 2 images in a row + voice below
+  // Bento box: main left tall, right column with 2 images in a row + voice below.
+  // Explicit heights prevent the sub-image row from overflowing into the voice bar.
   bentoBox: { flexDirection: 'row', gap: Spacing.sm, height: 240 },
   bentoLeft: { flex: 1.1 },
   bentoMain: { width: '100%', height: '100%', borderRadius: BorderRadius.lg },
-  bentoRight: { flex: 1, gap: Spacing.sm },
-  bentoSubRow: { flexDirection: 'row', gap: Spacing.sm, flex: 1 },
-  bentoSubImage: { flex: 1, borderRadius: BorderRadius.lg },
+  bentoRight: { flex: 1, gap: Spacing.sm, flexDirection: 'column' },
+  // Fixed height so the row never grows past its budget (240 - 8 gap - 40 voice = 192)
+  bentoSubRow: { flexDirection: 'row', gap: Spacing.sm, height: 192 },
+  bentoSubImage: { flex: 1, height: '100%', borderRadius: BorderRadius.lg },
   voiceMessage: {
     flexDirection: 'row', alignItems: 'center', gap: Spacing.sm,
     backgroundColor: Colors.surface,
     borderRadius: BorderRadius.pill,
     borderWidth: 1, borderColor: Colors.border,
     paddingHorizontal: Spacing.md, paddingVertical: Spacing.sm,
+    height: 40,
   },
   voiceTime: { fontFamily: Fonts.bodyMedium, fontSize: 12, color: Colors.text, minWidth: 36 },
   waveformMini: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 1, height: 22 },
@@ -295,7 +304,7 @@ const styles = StyleSheet.create({
   textRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' },
   journalText: { fontFamily: Fonts.body, fontSize: 16, lineHeight: 28, color: Colors.text },
 
-  // Sticker picker
+  // Sticker picker — matches Figma sticker board layout
   stickerContent: { gap: Spacing.lg },
   searchBar: {
     flexDirection: 'row', alignItems: 'center',
@@ -310,17 +319,18 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.pill, backgroundColor: Colors.surface,
     borderWidth: 1, borderColor: Colors.border, alignItems: 'center', justifyContent: 'center',
   },
-  filterTagActive: { backgroundColor: Colors.primary, borderColor: Colors.primary },
-  filterTagSelected: { borderColor: Colors.primary, backgroundColor: Colors.primaryLight },
+  // Active filter pill matches Profile/journal vocabulary: dark fill + light text
+  filterTagActive: { backgroundColor: Colors.dark, borderColor: Colors.dark },
+  filterTagSelected: { borderColor: Colors.dark, backgroundColor: Colors.dark },
   filterText: { fontFamily: Fonts.bodyMedium, fontSize: 12, color: Colors.text },
-  stickerGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.sm },
+  // 4-column grid; stickers float free (no card, no border)
+  stickerGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.sm, rowGap: Spacing.lg },
   stickerItem: {
-    width: '31%' as any, aspectRatio: 1,
-    backgroundColor: Colors.surface, borderRadius: BorderRadius.md,
-    borderWidth: 1, borderColor: Colors.border,
-    alignItems: 'center', justifyContent: 'center', padding: Spacing.sm,
+    width: '23%' as any,
+    aspectRatio: 1,
+    alignItems: 'center', justifyContent: 'center',
   },
-  stickerImage: { width: '80%', height: '80%' },
+  stickerImage: { width: '100%', height: '100%' },
 
   // Floating toolbar - fully rounded
   toolbar: {
