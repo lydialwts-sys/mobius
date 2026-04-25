@@ -195,7 +195,7 @@ export const courses: Course[] = [
             imageAspect: 501 / 549,
             cards: [
               { text: 'But...' },
-              { text: "You aren't 'weird' for thinking this way—you're actually just human.", highlight: true },
+              { text: "You aren't 'weird' for thinking this way, you're actually just human.", highlight: true },
             ],
           },
         ],
@@ -469,7 +469,7 @@ export const roleplayScenarios = [
   {
     id: 'ghosted-rp',
     title: 'The Ghosted Post',
-    setup: 'You posted a photo you really liked on Instagram 3 hours ago. It has 2 likes — both from family members. Your friend just posted and already has 47 likes.',
+    setup: 'You posted a photo you really liked on Instagram 3 hours ago. It has 2 likes, both from family members. Your friend just posted and already has 47 likes.',
     scenes: [
       {
         id: 'scene-1',
@@ -478,7 +478,7 @@ export const roleplayScenarios = [
         choices: [
           { text: 'Delete your post immediately', outcome: 'avoid', feedback: 'Deleting might feel like relief, but it doesn\'t address the feeling underneath. Let\'s explore what\'s really going on.' },
           { text: 'Take a breath and put down your phone', outcome: 'healthy', feedback: 'Taking a pause is a great first step. It gives you space to process instead of reacting.' },
-          { text: 'Start comparing your photos', outcome: 'spiral', feedback: 'Comparing yourself to others online is a fast track to feeling worse. Remember — you\'re seeing their highlight reel.' },
+          { text: 'Start comparing your photos', outcome: 'spiral', feedback: 'Comparing yourself to others online is a fast track to feeling worse. Remember, you\'re seeing their highlight reel.' },
         ],
       },
       {
@@ -531,7 +531,7 @@ export const sampleChatMessages: ChatMessage[] = [
   { id: 'c2', role: 'user', content: 'idk just kinda off today', timestamp: '2:31 PM' },
   { id: 'c3', role: 'ai', content: 'I hear you. "Off" can mean a lot of things. Can you tell me more about what that feels like for you right now?', timestamp: '2:31 PM' },
   { id: 'c4', role: 'user', content: 'like im stressed but also bored? and kinda lonely i guess', timestamp: '2:32 PM' },
-  { id: 'c5', role: 'ai', content: 'That\'s actually really insightful — feeling stressed AND bored at the same time is super common for teens. It might be what we call "restless anxiety" — your mind is racing but nothing feels engaging enough. The loneliness adds another layer. Want to explore what might be behind these feelings?', timestamp: '2:32 PM' },
+  { id: 'c5', role: 'ai', content: 'That\'s actually really insightful, feeling stressed AND bored at the same time is super common for teens. It might be what we call "restless anxiety", your mind is racing but nothing feels engaging enough. The loneliness adds another layer. Want to explore what might be behind these feelings?', timestamp: '2:32 PM' },
 ];
 
 export const moodOptions = [

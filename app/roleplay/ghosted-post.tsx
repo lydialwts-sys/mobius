@@ -39,7 +39,7 @@ const STEPS: Step[] = [
   // 1: Setup
   { type: 'scenario', narration: 'You spent an hour editing a photo from your weekend. You post it, feeling good.', image: GPAssets.pathA1 },
   // 2: Waiting
-  { type: 'scenario', narration: 'You check back 30 minutes later. 2 likes — both from family.', image: GPAssets.pathA2 },
+  { type: 'scenario', narration: 'You check back 30 minutes later. 2 likes, both from family.', image: GPAssets.pathA2 },
   // 3: Comparison
   { type: 'scenario', narration: 'You open Instagram and see your friend just posted. Already 47 likes. Your stomach drops.', image: GPAssets.pathB1 },
   // 4: Time passes
@@ -59,12 +59,12 @@ const STEPS: Step[] = [
     ],
   },
   // 8: Reframe
-  { type: 'scenario', narration: "You notice the tight feeling in your chest. That's your body telling you something. This feeling has a name — it's a mix of loneliness and self-doubt.", image: GPAssets.scenarioC },
+  { type: 'scenario', narration: "You notice the tight feeling in your chest. That's your body telling you something. This feeling has a name, it's a mix of loneliness and self-doubt.", image: GPAssets.scenarioC },
   // 9: Insight
   {
     type: 'insight',
     insightTitle: 'You just met Loneliness',
-    insightBody: "Loneliness often shows up when we feel invisible — especially online. It disguises itself as \"nobody cares\" but really it's saying \"I want to be seen.\" And that's completely valid.",
+    insightBody: "Loneliness often shows up when we feel invisible, especially online. It disguises itself as \"nobody cares\" but really it's saying \"I want to be seen.\" And that's completely valid.",
     image: GPAssets.ending1,
   },
 ];
