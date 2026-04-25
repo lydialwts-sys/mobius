@@ -34,7 +34,24 @@
       "Bash(sed -i '' 's/scale: 0.6/scale: 0.92/g' app/roleplay/result.tsx)",
       "Bash(sed -i '' 's/scale: 0.8/scale: 0.94/g' app/chapter/\\\\[id\\\\].tsx)",
       "Bash(sed -i '' 's/scale: 0.8/scale: 0.94/g' src/components/EmotionCharacter.tsx)",
-      "Bash(sed -i '' 's/scale: 0.85/scale: 0.95/g' app/emotion/\\\\[id\\\\].tsx)"
+      "Bash(sed -i '' 's/scale: 0.85/scale: 0.95/g' app/emotion/\\\\[id\\\\].tsx)",
+      "mcp__mcp-registry__list_connectors",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "mcp__Claude_in_Chrome__navigate",
+      "mcp__Claude_in_Chrome__computer",
+      "Bash(curl -s http://localhost:8083/course/lesson/sic-1)",
+      "Bash(curl -s 'http://localhost:8083/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable')",
+      "Bash(ln -s /Users/lydialwts/Documents/mobius/node_modules /Users/lydialwts/Documents/mobius/.claude/worktrees/reverent-morse-fa8bb4/node_modules)",
+      "Bash(curl -s -L http://localhost:8083/course/lesson/sic-1)",
+      "Bash(curl -s 'http://localhost:8081/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable')",
+      "Bash(git restore *)",
+      "Bash(rm node_modules)",
+      "Bash(/usr/bin/python3 -c ' *)",
+      "Bash(/usr/bin/sips -g all \"/Users/lydialwts/Documents/mobius/.claude/worktrees/reverent-morse-fa8bb4/assets/in app_thumbnail/meet_anxiety_thumbnail.png\")",
+      "Bash(/usr/bin/sips -g all \"/Users/lydialwts/Documents/mobius/.claude/worktrees/reverent-morse-fa8bb4/assets/in app_thumbnail/the ghosted post_thumbnail.png\")",
+      "Bash(/usr/bin/python3)",
+      "Bash(/usr/bin/python3 -c \"import struct, zlib\")",
+      "Bash(/usr/bin/python3 -m pip install --user Pillow)"
     ]
   }
 }

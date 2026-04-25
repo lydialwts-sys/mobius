@@ -7,16 +7,69 @@ export interface EmotionCharacter {
   unlocked: boolean;
 }
 
+export type LessonStepType =
+  | 'intro'           // course_1 only: Knowledge Session landing
+  | 'character-intro' // course_1 only: meet the Anxiety character
+  | 'quiz'            // 3-4 option cards
+  | 'reveal'          // "Great job!"/"Reveal" white-card stack
+  | 'insight'         // "Insight" white-card stack (highlight = blue accent)
+  | 'summary';        // course_3 final: collected insights + Complete Session
+
+export interface LessonOption {
+  text: string;
+  emoji?: string;          // for course_1 quiz options
+  image?: any;             // small inline doodle (cloud/shield/telescope/etc.)
+  imageAspect?: number;
+}
+
+export interface LessonCard {
+  text: string;
+  highlight?: boolean;     // true = blue accent text — the "punchline" card
+}
+
+export interface LessonInsightSummary {
+  title: string;           // "The 70% Rule"
+  body: string;
+  image: any;
+}
+
 export interface LessonStep {
   id: string;
-  type: 'info' | 'quiz' | 'reflection' | 'character-reveal';
-  title: string;
-  content: string;
-  options?: string[];
-  correctAnswer?: number;
-  characterId?: string;
-  image?: any;
-  imageAspect?: number; // width / height of natural PNG, used by View-wrapper
+  type: LessonStepType;
+
+  // type === 'intro' (Knowledge Session landing)
+  intro?: {
+    label: string;         // "Knowledge Session"
+    title: string;
+    tag: string;           // "Anticipate 3 min"
+    description: string;
+    image: any;
+    imageAspect: number;
+    sources: { title: string; ref: string };
+  };
+
+  // type === 'character-intro'
+  characterImage?: any;
+  characterImageAspect?: number;
+  characterCaption?: string;   // "Hi Alex, I'm your Anxiety"
+  characterCard?: string;      // body card under caption
+
+  // type === 'quiz'
+  quizSubtitle?: string;       // "Take a guess:" / "Be honest:"
+  quizContext?: string;        // gray context line above the question (course_3 screen 3)
+  quizTitle?: string;          // blue heading question
+  options?: LessonOption[];
+  correctAnswer?: number;      // -1 = any answer fine
+
+  // type === 'reveal' | 'insight'
+  sectionTitle?: string;       // "Great job!" / "Reveal" / "Insight"
+  image?: any;                 // hero illustration (bottom-anchored)
+  imageAspect?: number;
+  cards?: LessonCard[];
+
+  // type === 'summary'
+  summaryTitle?: string;       // "Insights about Anxiety"
+  insights?: LessonInsightSummary[];
 }
 
 export interface Lesson {
@@ -81,48 +134,234 @@ export const courses: Course[] = [
     completedLessons: 2,
     characterIds: ['self-doubt', 'calm'],
     lessons: [
+      // course_1 — Anxiety scenario
       {
         id: 'sic-1',
-        title: 'Meet Your Inner Critic',
-        subtitle: 'Everyone has one — let\'s get to know yours',
-        completed: true,
-        thumbnail: require('../../assets/in app_thumbnail/silence_the_inner_critique_thumbnail.png'),
-        steps: [
-          { id: 's1', type: 'info', title: 'What is the Inner Critic?', content: 'Your inner critic is that voice in your head that tells you you\'re not good enough. It might say things like "you\'re so dumb" or "everyone is judging you." The thing is — almost everyone has one.', image: require('../../assets/in app_thumbnail/silence_the_inner_critique_header.png'), imageAspect: 488 / 403 },
-          { id: 's2', type: 'info', title: 'Where Does It Come From?', content: 'Your inner critic often develops from past experiences — maybe a harsh teacher, social media comparisons, or pressure to be perfect. It thinks it\'s protecting you, but it usually just makes you feel worse.', image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path A_option 1.png'), imageAspect: 150 / 141 },
-          { id: 's3', type: 'quiz', title: 'Quick Check', content: 'Which of these is something your inner critic might say?', options: ['"I should try my best"', '"I\'m such a failure"', '"That was a good effort"', '"I\'ll do better next time"'], correctAnswer: 1, image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path A_option 2.png'), imageAspect: 263 / 148 },
-          { id: 's4', type: 'character-reveal', title: 'You\'ve met Self-Doubt!', content: 'Self-Doubt is that cloudy feeling that makes everything seem harder than it is. Now that you can recognize it, you can start to manage it.', characterId: 'self-doubt', image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path A_reveal.png'), imageAspect: 501 / 549 },
-        ],
-      },
-      {
-        id: 'sic-2',
-        title: 'Spotting the Pattern',
-        subtitle: 'Notice when your critic shows up',
-        completed: true,
-        thumbnail: require('../../assets/in app_thumbnail/silence_the_inner_critique_thumbnail.png'),
-        steps: [
-          { id: 's1', type: 'info', title: 'Common Triggers', content: 'Your inner critic loves to show up during specific moments: before a test, after posting on social media, when comparing yourself to friends, or when you make a mistake.', image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path A_option 3.png'), imageAspect: 257 / 167 },
-          { id: 's2', type: 'reflection', title: 'Think About It', content: 'When was the last time your inner critic was really loud? What triggered it?', image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path A_success.png'), imageAspect: 451 / 398 },
-          { id: 's3', type: 'info', title: 'The Pattern', content: 'Trigger → Thought → Feeling → Behavior. When you can spot the trigger, you can interrupt the pattern before it spirals.', image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path B_option 1.png'), imageAspect: 134 / 172 },
-          { id: 's4', type: 'quiz', title: 'Check Your Understanding', content: 'What\'s the first step to managing your inner critic?', options: ['Ignoring it completely', 'Recognizing when it shows up', 'Being harder on yourself', 'Avoiding all triggers'], correctAnswer: 1, image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path b_option 2.png'), imageAspect: 175 / 153 },
-        ],
-      },
-      {
-        id: 'sic-3',
-        title: 'Talk Back to It',
-        subtitle: 'Reframe negative self-talk',
+        title: 'Silence inner critic',
+        subtitle: 'Meet your Anxiety',
         completed: false,
         thumbnail: require('../../assets/in app_thumbnail/silence_the_inner_critique_thumbnail.png'),
         steps: [
-          { id: 's1', type: 'info', title: 'The Reframe Technique', content: 'Instead of fighting your inner critic, try reframing what it says. "I\'m so stupid" becomes "I\'m still learning." "Everyone hates me" becomes "I\'m having a rough day."', image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path B_option 3.png'), imageAspect: 177 / 147 },
-          { id: 's2', type: 'info', title: 'Talk to Yourself Like a Friend', content: 'Would you say these things to your best friend? Probably not. Try talking to yourself the way you\'d talk to someone you care about.', image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path B_insights.png'), imageAspect: 489 / 412 },
-          { id: 's3', type: 'reflection', title: 'Practice', content: 'Take a harsh thought you\'ve had recently and try to reframe it. What would you say to a friend in the same situation?', image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path B_insights_2.png'), imageAspect: 307 / 383 },
-          { id: 's4', type: 'quiz', title: 'Reframe This', content: 'How could you reframe "I always mess everything up"?', options: ['"It\'s true, I do"', '"I made a mistake, and that\'s okay"', '"I should never try new things"', '"Other people mess up more"'], correctAnswer: 1, image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path B_success.png'), imageAspect: 304 / 344 },
+          {
+            id: 's1',
+            type: 'intro',
+            intro: {
+              label: 'Knowledge Session',
+              title: 'Silence inner critic',
+              tag: 'Anticipate 3 min',
+              description: 'Managing the "everyone is looking at me" feeling and the fear of being judged.',
+              image: require('../../assets/in app_thumbnail/silence_the_inner_critique_header.png'),
+              imageAspect: 488 / 403,
+              sources: { title: "Don't Silence Your Inner Critic. Talk to It.", ref: 'Ron Carucci, Harvard Business Review' },
+            },
+          },
+          {
+            id: 's2',
+            type: 'character-intro',
+            characterImage: require('../../assets/in app_thumbnail/meet_anxiety_thumbnail.png'),
+            characterImageAspect: 1,
+            characterCaption: "Hi Alex, I'm your Anxiety",
+            characterCard: "The Inner Critic is like a pop-up advertisement in your brain that you didn't ask for.",
+          },
+          {
+            id: 's3',
+            type: 'quiz',
+            quizTitle: 'Has it ever interrupted your day?',
+            options: [
+              { text: 'Everyone is staring at my outfit/hair.', emoji: '😳' },
+              { text: "I'm the only one who doesn't get this lesson.", emoji: '🤓' },
+              { text: "I shouldn't have said that weird thing 3 hours ago.", emoji: '🤦‍♀️' },
+              { text: 'My friends are probably hanging out without me.', emoji: '💔' },
+            ],
+            correctAnswer: -1,
+          },
+          {
+            id: 's4',
+            type: 'reveal',
+            sectionTitle: 'Reveal',
+            image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path A_reveal.png'),
+            imageAspect: 501 / 549,
+            cards: [
+              { text: "Ouch. We've all been there. It's like having a tiny, mean commentator living in your head." },
+              { text: "It's exhausting, it's loud, and honestly?" },
+              { text: "It's really heavy to carry around all day." },
+            ],
+          },
+          {
+            id: 's5',
+            type: 'reveal',
+            sectionTitle: 'Reveal',
+            image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path A_reveal.png'),
+            imageAspect: 501 / 549,
+            cards: [
+              { text: 'But...' },
+              { text: "You aren't 'weird' for thinking this way—you're actually just human.", highlight: true },
+            ],
+          },
         ],
       },
-      { id: 'sic-4', title: 'The Self-Compassion Break', subtitle: 'Be kind to yourself in tough moments', completed: false, steps: [] },
-      { id: 'sic-5', title: 'Building Your Shield', subtitle: 'Create a toolkit for tough days', completed: false, steps: [] },
-      { id: 'sic-6', title: 'Level Up', subtitle: 'Review & celebrate your progress', completed: false, steps: [] },
+      // course_2 — Why your brain made it
+      {
+        id: 'sic-2',
+        title: 'Silence inner critic',
+        subtitle: 'Why your brain even allows it',
+        completed: false,
+        thumbnail: require('../../assets/in app_thumbnail/silence_the_inner_critique_thumbnail.png'),
+        steps: [
+          {
+            id: 's1',
+            type: 'quiz',
+            quizSubtitle: 'Take a guess:',
+            quizTitle: 'Why does your brain even allow this mean voice to exist?',
+            options: [
+              { text: 'Because your brain wants you to be sad.', image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path A_option 1.png'), imageAspect: 150 / 141 },
+              { text: "It's an old survival instinct trying to keep you 'safe.'", image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path A_option 2.png'), imageAspect: 263 / 148 },
+              { text: "It's a sign that you are actually failing.", image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path A_option 3.png'), imageAspect: 257 / 167 },
+            ],
+            correctAnswer: 1,
+          },
+          {
+            id: 's2',
+            type: 'reveal',
+            sectionTitle: 'Great job!',
+            image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path A_success.png'),
+            imageAspect: 451 / 398,
+            cards: [
+              { text: "Thousands of years ago, being 'kicked out' of the tribe meant you wouldn't survive." },
+              { text: "Your brain developed a 'Social Radar' to make sure you fit in." },
+              { text: 'Today, your Inner Critic is just that radar over-reacting.' },
+              { text: "It's not trying to hurt you; it's a 'Security Guard' that is way too stressed out.", highlight: true },
+            ],
+          },
+          {
+            id: 's3',
+            type: 'quiz',
+            quizSubtitle: 'Be honest:',
+            quizTitle: "When you're scrolling through social media, what percentage of your peers do you think are actually confident and NOT struggling with an Inner Critic?",
+            options: [
+              { text: 'Only about 10%' },
+              { text: 'Around 50%' },
+              { text: 'Almost everyone looks like they have it together.' },
+            ],
+            correctAnswer: -1,
+          },
+          {
+            id: 's4',
+            type: 'reveal',
+            sectionTitle: 'Reveal',
+            image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path A_reveal.png'),
+            imageAspect: 501 / 549,
+            cards: [
+              { text: "It looks like everyone is fine (Choice C), but research shows that over 70% of teenagers report having a 'harsh inner voice' daily." },
+              { text: "You're seeing their 'Highlight Reel' while feeling your 'Behind-the-Scenes.' You are definitely not alone.", highlight: true },
+            ],
+          },
+        ],
+      },
+      // course_3 — Spotlight Effect & coping (longest, ends with summary)
+      {
+        id: 'sic-3',
+        title: 'Silence inner critic',
+        subtitle: 'Spotlight effect & tools',
+        completed: false,
+        thumbnail: require('../../assets/in app_thumbnail/silence_the_inner_critique_thumbnail.png'),
+        steps: [
+          {
+            id: 's1',
+            type: 'quiz',
+            quizSubtitle: 'Take a guess:',
+            quizTitle: 'If your Inner Critic was an ancestor from 10,000 years ago, what would their job be?',
+            options: [
+              { text: 'The Party Planner.', image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path B_option 1.png'), imageAspect: 134 / 172 },
+              { text: 'The Look-Out Scout.', image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path b_option 2.png'), imageAspect: 175 / 153 },
+              { text: 'The Artist.', image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path B_option 3.png'), imageAspect: 177 / 147 },
+            ],
+            correctAnswer: 1,
+          },
+          {
+            id: 's2',
+            type: 'reveal',
+            sectionTitle: 'Great job!',
+            image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path B_success.png'),
+            imageAspect: 304 / 344,
+            cards: [
+              { text: "Your brain is hard-wired to look for 'social threats.'" },
+              { text: "Back then, being 'uncool' or annoying the group meant you might get kicked out of the tribe and have to fight a saber-tooth tiger alone." },
+              { text: "Your brain thinks a 'cringe' text message is a life-or-death survival situation!", highlight: true },
+            ],
+          },
+          {
+            id: 's3',
+            type: 'quiz',
+            quizContext: 'Think about a time a classmate tripped or said something slightly wrong in class.',
+            quizTitle: 'How long did you think about it afterward?',
+            options: [
+              { text: 'I thought about it for days.' },
+              { text: 'Maybe for 5 seconds, then I forgot.' },
+              { text: "I'm still thinking about it now." },
+            ],
+            correctAnswer: 1,
+          },
+          {
+            id: 's4',
+            type: 'insight',
+            sectionTitle: 'Insight',
+            image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path B_insights.png'),
+            imageAspect: 489 / 412,
+            cards: [
+              { text: 'This is called the Spotlight Effect.', highlight: true },
+              { text: 'We think everyone is shining a spotlight on our mistakes, but really, everyone is just holding their own spotlight, worrying about themselves!' },
+              { text: "If you don't judge them for hours, they likely aren't judging you either." },
+            ],
+          },
+          {
+            id: 's5',
+            type: 'quiz',
+            quizSubtitle: 'Be honest:',
+            quizTitle: 'When your Inner Critic gets really LOUD and mean, does that mean the things it\'s saying are more likely to be true?',
+            options: [
+              { text: 'Yes, the louder it is, the more I should listen.' },
+              { text: "No, it just means my brain's alarm is being extra sensitive." },
+            ],
+            correctAnswer: 1,
+          },
+          {
+            id: 's6',
+            type: 'insight',
+            sectionTitle: 'Insight',
+            image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path B_insights_2.png'),
+            imageAspect: 307 / 383,
+            cards: [
+              { text: 'Think of it like a car alarm.', highlight: true },
+              { text: 'A car alarm goes off whether someone is breaking in OR if a harmless cat just jumped on the hood.' },
+              { text: "A loud voice doesn't mean a big truth; it just means a sensitive alarm." },
+            ],
+          },
+          {
+            id: 's7',
+            type: 'summary',
+            summaryTitle: 'Insights about Anxiety',
+            insights: [
+              {
+                title: 'Social Radar',
+                body: "Your inner critic is not trying to hurt you; it's a 'Security Guard' that is way too stressed out.",
+                image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path A_success.png'),
+              },
+              {
+                title: 'The 70% Rule',
+                body: 'Most people around me are fighting the same internal battle, even if they look cool.',
+                // TODO: needs a "treasure box" illustration export from Figma
+                image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path A_reveal.png'),
+              },
+              {
+                title: 'Spotlight Effect',
+                body: 'We think everyone is shining a spotlight on our mistakes, but really, everyone is just holding their own spotlight, worrying about themselves!',
+                image: require('../../assets/in app_thumbnail/silence_the_inner_critique_path B_insights.png'),
+              },
+            ],
+          },
+        ],
+      },
     ],
   },
   {
@@ -188,6 +427,8 @@ export const chapters: Chapter[] = [
       { id: 'meet-anxiety', title: 'Meet Anxiety', route: '/emotion/anxiety', locked: false, completed: false, thumbnail: require('../../assets/in app_thumbnail/meet_anxiety_thumbnail.png') },
       { id: 'silence-inner-critic', title: 'Silence the inner critique', route: '/course/silence-inner-critic', locked: false, completed: false, thumbnail: require('../../assets/in app_thumbnail/silence_the_inner_critique_thumbnail.png') },
       { id: 'ghosted-post', title: 'The ghosted post', route: '/roleplay/ghosted-post', locked: false, completed: false, thumbnail: require('../../assets/in app_thumbnail/the ghosted post_thumbnail.png') },
+      // 4th node: locked until session 3 is completed
+      { id: 'anxiety-next', title: 'Coming soon', route: '', locked: true, completed: false },
     ],
   },
 ];
